@@ -1,12 +1,19 @@
+import { NotFound } from "../features/common/components/NotFound";
+import { Home } from "../pages/home";
+import { ProductDetail } from "../pages/product/ProductDetail";
+
 export const routes = [
   {
     path: "/",
-    render: null,
+    render: Home,
   },
-
+  {
+    path: "/product/:productID",
+    render: ProductDetail,
+  },
   {
     path: "*",
-    render: null,
+    render: NotFound,
   },
 ];
 
@@ -46,7 +53,7 @@ export function createRouter() {
       }
     }
   });
-  window.addEventListener("popstate", console.log);
+  window.addEventListener("popstate", router);
 
   router();
 }
