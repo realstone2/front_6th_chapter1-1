@@ -1,19 +1,22 @@
 import { NotFound } from "../features/common/components/NotFound";
-import { Home } from "../pages/home";
+import { Home } from "../pages/Home";
 import { ProductDetail } from "../pages/product/ProductDetail";
 
-const routes = [
+const routes: Array<{
+  path: string;
+  render: () => Promise<void> | void;
+}> = [
   {
     path: "/",
-    getComponent: Home,
+    render: Home,
   },
   {
     path: "/product/:productID",
-    getComponent: ProductDetail,
+    render: ProductDetail,
   },
   {
     path: "*",
-    getComponent: NotFound,
+    render: NotFound,
   },
 ];
 
@@ -31,25 +34,20 @@ function findRoute(pathname) {
 }
 
 // 라우터 함수
-function router() {
-  const root = document.getElementById("root");
-
+async function router() {
   const route = findRoute(window.location.pathname);
 
-  if (!route.getComponent) {
+  if (!route?.render) {
     return;
   }
 
-  if (!root) {
-    return;
-  }
-
-  root.innerHTML = route.getComponent();
+  route?.render();
 }
 
 export function createRouter() {
   document.body.addEventListener("click", (e) => {
-    const a = e.target.closest("a[data-link]");
+    //TODO: agent가 잘못 짜준 코드 수정하기
+    const a = e.target?.closest("a[data-link]");
     if (a && a.href) {
       // 외부 링크/파일 다운로드 등은 무시
       if (a.host !== location.host) return;
