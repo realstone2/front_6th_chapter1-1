@@ -1,6 +1,4 @@
 /**
  * ProductDetail
  **/
-export function ProductDetail() {
-  return;
-}
+export function ProductDetail() {}
