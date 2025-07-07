@@ -2,18 +2,18 @@ import { NotFound } from "../features/common/components/NotFound";
 import { Home } from "../pages/home";
 import { ProductDetail } from "../pages/product/ProductDetail";
 
-export const routes = [
+const routes = [
   {
     path: "/",
-    render: Home,
+    getComponent: Home,
   },
   {
     path: "/product/:productID",
-    render: ProductDetail,
+    getComponent: ProductDetail,
   },
   {
     path: "*",
-    render: NotFound,
+    getComponent: NotFound,
   },
 ];
 
@@ -32,12 +32,19 @@ function findRoute(pathname) {
 
 // 라우터 함수
 function router() {
+  const root = document.getElementById("root");
+
   const route = findRoute(window.location.pathname);
-  if (!route.render) {
+
+  if (!route.getComponent) {
     return;
   }
 
-  route.render();
+  if (!root) {
+    return;
+  }
+
+  root.innerHTML = route.getComponent();
 }
 
 export function createRouter() {
