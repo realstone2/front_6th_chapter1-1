@@ -1,6 +1,13 @@
 type Listener = () => any;
 
-export const createStore = <T extends object | unknown[]>(initValue: T) => {
+const cleanUpListenerList = new Set<() => void>();
+
+export const clearSubscribers = () => {
+  cleanUpListenerList.forEach((cleanUp) => cleanUp());
+  cleanUpListenerList.clear();
+};
+
+export const createStore = <T extends object | unknown[] | null>(initValue: T) => {
   let value = initValue;
   let listeners: Listener[] = [];
 
@@ -21,9 +28,14 @@ export const createStore = <T extends object | unknown[]>(initValue: T) => {
     subscribe: (listener: Listener) => {
       listeners.push(listener);
       // 클린업 함수 반환
-      return () => {
+
+      const cleanUpCallback = () => {
         listeners = listeners.filter((l) => l !== listener);
       };
+
+      cleanUpListenerList.add(cleanUpCallback);
+
+      return cleanUpCallback;
     },
   };
 };
