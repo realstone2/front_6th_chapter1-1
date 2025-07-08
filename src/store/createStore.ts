@@ -1,16 +1,29 @@
+type Listener = () => any;
+
 export const createStore = <T extends object | unknown[]>(initValue: T) => {
   let value = initValue;
+  let listeners: Listener[] = [];
 
   return {
     get value() {
       return value;
     },
+
     setValue: (updater: T | ((prev: T) => T)) => {
       if (typeof updater === "function") {
         value = updater(value);
       } else {
         value = updater;
       }
+      listeners.forEach((listener) => listener());
+    },
+
+    subscribe: (listener: Listener) => {
+      listeners.push(listener);
+      // 클린업 함수 반환
+      return () => {
+        listeners = listeners.filter((l) => l !== listener);
+      };
     },
   };
 };

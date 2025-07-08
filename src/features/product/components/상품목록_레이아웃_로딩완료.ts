@@ -1,4 +1,4 @@
-import { Product } from "../store/product-store";
+import { Product } from "../../../api/productApi";
 import { 상품_아이템_컴포넌트 } from "./상품_아이템_컴포넌트";
 
 export function 상품목록_레이아웃_로딩완료(products: Product[]) {

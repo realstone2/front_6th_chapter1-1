@@ -1,4 +1,4 @@
-import { Product } from "../store/product-store";
+import { Product } from "../../../api/productApi";
 
 /**
  * 상품_아이템_컴포넌트
