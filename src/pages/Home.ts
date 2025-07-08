@@ -35,8 +35,6 @@ export async function Home() {
     })),
   );
 
-  console.log("🐶 jindol log ", data);
-
   productStore.setValue((prev) => ({
     ...prev,
     isLoading: false,
