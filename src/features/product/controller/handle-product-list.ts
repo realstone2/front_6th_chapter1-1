@@ -28,12 +28,7 @@ export const handleProductList = () => {
       ...prev,
       isLoading: false,
 
-      data: prev.data.concat([
-        {
-          items: response.products,
-          page: response.pagination.page,
-        },
-      ]),
+      data: prev.data.concat([response]),
     }));
   });
 };

@@ -1,3 +1,4 @@
+import { 다음_페이지_로딩_컴포넌트 } from "../features/product/components/다음_페이지_로딩_컴포넌트";
 import { 상품목록_로딩컴포넌트 } from "../features/product/components/상품목록_로딩컴포넌트";
 import { 상품목록_메인레이아웃 } from "../features/product/components/상품목록_메인레이아웃";
 import { 상품목록_상품_리스트_컴포넌트 } from "../features/product/components/상품목록_상품_리스트_컴포넌트";
@@ -31,10 +32,11 @@ const render = () => {
 
   container.innerHTML = "";
 
-  if (isLoading) {
-    container.innerHTML = 상품목록_로딩컴포넌트();
+  if (isLoading && !data.length) {
+    container.innerHTML = `${상품목록_로딩컴포넌트()}`;
     return;
   }
 
-  container.innerHTML = 상품목록_상품_리스트_컴포넌트(data.flatMap((v) => v.items));
+  container.innerHTML = 상품목록_상품_리스트_컴포넌트(data);
+  //TODO: 옵저버 무한 스크롤 구현 필요
 };
