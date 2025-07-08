@@ -1,10 +1,11 @@
 import { NotFound } from "../features/common/components/NotFound";
 import { Home } from "../pages/Home";
 import { ProductDetail } from "../pages/product/ProductDetail";
+let currentCleanup: (() => void) | null = null;
 
 const routes: Array<{
   path: string;
-  render: () => Promise<void> | void;
+  render: () => Promise<() => void | void> | (() => void) | void;
 }> = [
   {
     path: "/",
@@ -35,13 +36,22 @@ function findRoute(pathname) {
 
 // 라우터 함수
 async function router() {
+  if (currentCleanup) {
+    currentCleanup();
+    currentCleanup = null;
+  }
+
   const route = findRoute(window.location.pathname);
 
   if (!route?.render) {
     return;
   }
 
-  route?.render();
+  const cleanUp = await route?.render();
+
+  if (typeof cleanUp === "function") {
+    currentCleanup = cleanUp;
+  }
 }
 
 export function createRouter() {

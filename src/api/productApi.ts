@@ -1,3 +1,5 @@
+import { searchParamsStore } from "../features/common/search-params/search-params-store";
+
 export type Product = {
   title: string;
   link: string;
@@ -43,12 +45,14 @@ export interface GetProductsParams {
 }
 
 // 상품 목록 조회
-export async function getProducts(params: GetProductsParams = {}): Promise<ProductListResponse> {
-  const { page = 1, limit = 20, search = "", category1 = "", category2 = "", sort = "price_asc" } = params;
+export async function getProducts(): Promise<ProductListResponse> {
+  const params = searchParamsStore.value;
+
+  const { page = "1", limit = "20", search = "", category1 = "", category2 = "", sort = "price_asc" } = params ?? {};
 
   const searchParams = new URLSearchParams({
-    page: page.toString(),
-    limit: limit.toString(),
+    page: page,
+    limit: limit,
     ...(search && { search }),
     ...(category1 && { category1 }),
     ...(category2 && { category2 }),

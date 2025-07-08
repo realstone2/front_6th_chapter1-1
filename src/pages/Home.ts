@@ -1,54 +1,21 @@
 import { getProducts } from "../api/productApi";
 import { 상품목록_레이아웃_로딩 } from "../features/product/components/상품목록_레이아웃_로딩";
 import { 상품목록_레이아웃_로딩완료 } from "../features/product/components/상품목록_레이아웃_로딩완료";
+import { handleProductList } from "../features/product/controller/handle-product-list";
 
-import { Product, productStore } from "../features/product/store/product-store";
+import { productStore } from "../features/product/store/product-store";
+import { clearSubscribers } from "../store/create-store";
 
 //TODO: 스토어 핸들링쪽 리팩토링
 /**
  * Home
  **/
 export async function Home() {
-  const searchParams = new URLSearchParams(window.location.search);
+  handleProductList();
 
-  const queryObject = Object.fromEntries(searchParams.entries());
+  productStore.subscribe(render);
 
-  if (searchParams.get("limit") !== productStore.value.limit?.toString()) {
-    productStore.setValue((prev) => ({
-      ...prev,
-      data: [],
-      limit: parseInt(searchParams.get("limit") || "20", 10),
-    }));
-  }
-
-  productStore.setValue((prev) => ({
-    ...prev,
-    isLoading: true,
-  }));
-
-  render();
-
-  const data = await getProducts(queryObject).catch((err) =>
-    productStore.setValue((prev) => ({
-      ...prev,
-      error: err.toString(),
-    })),
-  );
-
-  productStore.setValue((prev) => ({
-    ...prev,
-    isLoading: false,
-    data: prev.data.concat([
-      {
-        items: data.products,
-        page: parseInt(queryObject.page || "1", 10),
-      },
-    ]),
-  }));
-
-  const { isLoading } = productStore.value;
-
-  render();
+  return clearSubscribers;
 }
 
 const render = () => {

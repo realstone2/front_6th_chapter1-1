@@ -1,8 +1,7 @@
 import { Product } from "../../../api/productApi";
 import { QueryDataType } from "../../../query/query-data-type";
-import { createStore } from "../../../store/createStore";
+import { createStore } from "../../../store/create-store";
 
-//TODO: 단건 쿼리와 엮을 필요는 없을지 고민 포인트
 export const productStore = createStore<QueryDataType<Product>>({
   isLoading: false,
   data: [],
