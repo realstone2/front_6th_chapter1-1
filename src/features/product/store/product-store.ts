@@ -1,8 +1,8 @@
-import { Product } from "../../../api/productApi";
+import { Product, ProductListResponse } from "../../../api/productApi";
 import { QueryDataType } from "../../../query/query-data-type";
 import { createStore } from "../../../store/create-store";
 
-export const productStore = createStore<QueryDataType<Product>>({
+export const productStore = createStore<QueryDataType<ProductListResponse[]>>({
   isLoading: false,
   data: [],
   error: null,
