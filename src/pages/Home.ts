@@ -1,6 +1,6 @@
-import { getProducts } from "../api/productApi";
-import { 상품목록_레이아웃_로딩 } from "../features/product/components/상품목록_레이아웃_로딩";
-import { 상품목록_레이아웃_로딩완료 } from "../features/product/components/상품목록_레이아웃_로딩완료";
+import { 상품목록_로딩컴포넌트 } from "../features/product/components/상품목록_로딩컴포넌트";
+import { 상품목록_메인레이아웃 } from "../features/product/components/상품목록_메인레이아웃";
+import { 상품목록_상품_리스트_컴포넌트 } from "../features/product/components/상품목록_상품_리스트_컴포넌트";
 import { handleProductList } from "../features/product/controller/handle-product-list";
 
 import { productStore } from "../features/product/store/product-store";
@@ -11,6 +11,11 @@ import { clearSubscribers } from "../store/create-store";
  * Home
  **/
 export async function Home() {
+  const root = document.getElementById("root");
+  if (!root) return;
+
+  root.innerHTML = 상품목록_메인레이아웃();
+
   handleProductList();
 
   productStore.subscribe(render);
@@ -19,17 +24,17 @@ export async function Home() {
 }
 
 const render = () => {
-  const root = document.getElementById("root");
-  if (!root) return;
+  const container = document.getElementById("product-container");
+  if (!container) return;
 
   const { isLoading, data } = productStore.value;
 
-  root.innerHTML = "";
+  container.innerHTML = "";
 
   if (isLoading) {
-    root.innerHTML = 상품목록_레이아웃_로딩();
+    container.innerHTML = 상품목록_로딩컴포넌트();
     return;
   }
 
-  root.innerHTML = 상품목록_레이아웃_로딩완료(data.flatMap((v) => v.items));
+  container.innerHTML = 상품목록_상품_리스트_컴포넌트(data.flatMap((v) => v.items));
 };

@@ -1,5 +1,6 @@
-export function 상품목록_레이아웃_로딩() {
-  const 상품목록_레이아웃_로딩 = /* HTML */ `
+// 메인 레이아웃 컴포넌트: 공통 레이아웃(헤더, 필터, 푸터) + children(상품 영역)
+export function 상품목록_메인레이아웃() {
+  return /* HTML */ `
     <div class="min-h-screen bg-gray-50">
       <header class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-md mx-auto px-4 py-4">
@@ -18,6 +19,7 @@ export function 상품목록_레이아웃_로딩() {
                     d="M3 3h2l.4 2M7 13h10l4-8H5.4m2.6 8L6 2H3m4 11v6a1 1 0 001 1h1a1 1 0 001-1v-6M13 13v6a1 1 0 001 1h1a1 1 0 001-1v-6"
                   ></path>
                 </svg>
+                <!-- 필요시 뱃지 추가 -->
               </button>
             </div>
           </div>
@@ -34,8 +36,7 @@ export function 상품목록_레이아웃_로딩() {
                 id="search-input"
                 placeholder="상품명을 검색해보세요..."
                 value=""
-                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg
-                          focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,8 +59,8 @@ export function 상품목록_레이아웃_로딩() {
                 <button data-breadcrumb="reset" class="text-xs hover:text-blue-800 hover:underline">전체</button>
               </div>
               <!-- 1depth 카테고리 -->
-              <div class="flex flex-wrap gap-2">
-                <div class="text-sm text-gray-500 italic">카테고리 로딩 중...</div>
+              <div class="flex flex-wrap gap-2" id="category1-area">
+                <!-- 카테고리 영역: 로딩/완료 상태에 따라 다름 -->
               </div>
               <!-- 2depth 카테고리 -->
             </div>
@@ -83,8 +84,7 @@ export function 상품목록_레이아웃_로딩() {
                 <label class="text-sm text-gray-600">정렬:</label>
                 <select
                   id="sort-select"
-                  class="text-sm border border-gray-300 rounded px-2 py-1
-                             focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  class="text-sm border border-gray-300 rounded px-2 py-1 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="price_asc" selected="">가격 낮은순</option>
                   <option value="price_desc">가격 높은순</option>
@@ -95,64 +95,9 @@ export function 상품목록_레이아웃_로딩() {
             </div>
           </div>
         </div>
-        <!-- 상품 목록 -->
+        <!-- 상품 목록 영역 -->
         <div class="mb-6">
-          <div>
-            <!-- 상품 그리드 -->
-            <div class="grid grid-cols-2 gap-4 mb-6" id="products-grid">
-              <!-- 로딩 스켈레톤 -->
-              <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden animate-pulse">
-                <div class="aspect-square bg-gray-200"></div>
-                <div class="p-3">
-                  <div class="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div class="h-3 bg-gray-200 rounded w-2/3 mb-2"></div>
-                  <div class="h-5 bg-gray-200 rounded w-1/2 mb-3"></div>
-                  <div class="h-8 bg-gray-200 rounded"></div>
-                </div>
-              </div>
-              <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden animate-pulse">
-                <div class="aspect-square bg-gray-200"></div>
-                <div class="p-3">
-                  <div class="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div class="h-3 bg-gray-200 rounded w-2/3 mb-2"></div>
-                  <div class="h-5 bg-gray-200 rounded w-1/2 mb-3"></div>
-                  <div class="h-8 bg-gray-200 rounded"></div>
-                </div>
-              </div>
-              <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden animate-pulse">
-                <div class="aspect-square bg-gray-200"></div>
-                <div class="p-3">
-                  <div class="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div class="h-3 bg-gray-200 rounded w-2/3 mb-2"></div>
-                  <div class="h-5 bg-gray-200 rounded w-1/2 mb-3"></div>
-                  <div class="h-8 bg-gray-200 rounded"></div>
-                </div>
-              </div>
-              <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden animate-pulse">
-                <div class="aspect-square bg-gray-200"></div>
-                <div class="p-3">
-                  <div class="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div class="h-3 bg-gray-200 rounded w-2/3 mb-2"></div>
-                  <div class="h-5 bg-gray-200 rounded w-1/2 mb-3"></div>
-                  <div class="h-8 bg-gray-200 rounded"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="text-center py-4">
-              <div class="inline-flex items-center">
-                <svg class="animate-spin h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                <span class="text-sm text-gray-600">상품을 불러오는 중...</span>
-              </div>
-            </div>
-          </div>
+          <div id="product-container"></div>
         </div>
       </main>
       <footer class="bg-white shadow-sm sticky top-0 z-40">
@@ -162,6 +107,4 @@ export function 상품목록_레이아웃_로딩() {
       </footer>
     </div>
   `;
-
-  return 상품목록_레이아웃_로딩;
 }
