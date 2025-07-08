@@ -1,6 +1,6 @@
 export const 다음_페이지_로딩_컴포넌트 = () => {
   return /* HTML */ `
-    <div class="text-center py-4">
+    <div id="observer-target" class="text-center py-4">
       <div class="inline-flex items-center">
         <svg class="animate-spin h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

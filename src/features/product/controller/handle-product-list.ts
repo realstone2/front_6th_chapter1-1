@@ -7,28 +7,34 @@ export const handleProductList = () => {
   searchParamsStore.subscribe(async () => {
     const params = searchParamsStore.value;
 
-    if (params?.limit !== productStore.value.limit?.toString()) {
-      productStore.setValue((prev) => ({
-        ...prev,
-        data: [],
-        limit: parseInt(params?.limit || "20", 10),
-        isLoading: true,
-      }));
-    } else {
-      productStore.setValue((prev) => ({
-        ...prev,
-        limit: parseInt(params?.limit || "20", 10),
-        isLoading: true,
-      }));
-    }
+    //TODO: limit을 수정할 때 기존 store 데이터를 초기화시키는 로직 필요(?)
+    productStore.setValue((prev) => ({
+      ...prev,
+      limit: parseInt(params?.limit || "20", 10),
+      isLoading: true,
+    }));
 
     const response = await getProducts();
 
-    productStore.setValue((prev) => ({
-      ...prev,
-      isLoading: false,
+    productStore.setValue((prev) => {
+      //이미 해당 page 데이터가 있는 경우
+      if (
+        prev.data.some(
+          (v) => v.pagination.page === response.pagination.page && v.pagination.limit === response.pagination.limit,
+        )
+      ) {
+        return {
+          ...prev,
+          isLoading: false,
+        };
+      }
 
-      data: prev.data.concat([response]),
-    }));
+      return {
+        ...prev,
+        isLoading: false,
+
+        data: prev.data.concat([response]),
+      };
+    });
   });
 };
