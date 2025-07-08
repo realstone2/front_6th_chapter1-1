@@ -1,4 +1,4 @@
-import { 다음_페이지_로딩_컴포넌트 } from "../features/product/components/다음_페이지_로딩_컴포넌트";
+import { ProductListResponse } from "../api/productApi";
 import { 상품목록_로딩컴포넌트 } from "../features/product/components/상품목록_로딩컴포넌트";
 import { 상품목록_메인레이아웃 } from "../features/product/components/상품목록_메인레이아웃";
 import { 상품목록_상품_리스트_컴포넌트 } from "../features/product/components/상품목록_상품_리스트_컴포넌트";
@@ -6,6 +6,8 @@ import { handleProductList } from "../features/product/controller/handle-product
 
 import { productStore } from "../features/product/store/product-store";
 import { clearSubscribers } from "../store/create-store";
+import { throttle } from "../utils/throttle";
+import { 상품목록_하단_섹션 } from "../features/product/components/상품목록_하단_섹션";
 
 //TODO: 스토어 핸들링쪽 리팩토링
 /**
@@ -19,7 +21,7 @@ export async function Home() {
 
   handleProductList();
 
-  productStore.subscribe(render);
+  productStore.subscribe(throttle(render, 200));
 
   return clearSubscribers;
 }
@@ -38,5 +40,6 @@ const render = () => {
   }
 
   container.innerHTML = 상품목록_상품_리스트_컴포넌트(data);
-  //TODO: 옵저버 무한 스크롤 구현 필요
+
+  상품목록_하단_섹션();
 };

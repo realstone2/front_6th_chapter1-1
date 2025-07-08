@@ -1,12 +1,9 @@
 import { Product, ProductListResponse } from "../../../api/productApi";
-import { 다음_페이지_로딩_컴포넌트 } from "./다음_페이지_로딩_컴포넌트";
 import { 상품_아이템_컴포넌트 } from "./상품_아이템_컴포넌트";
 
 // 상품 목록 영역에 실제 상품 리스트를 렌더링
 export function 상품목록_상품_리스트_컴포넌트(props: ProductListResponse[]) {
   const products = props.flatMap((v) => v.products);
-
-  const lastItem = props[props.length - 1];
 
   return /* HTML */ `
     <div>
@@ -18,9 +15,6 @@ export function 상품목록_상품_리스트_컴포넌트(props: ProductListRes
       <div class="grid grid-cols-2 gap-4 mb-6" id="products-grid">
         ${products.map((product) => 상품_아이템_컴포넌트(product)).join("")}
       </div>
-      ${lastItem.pagination.hasNext
-        ? 다음_페이지_로딩_컴포넌트()
-        : '<div class="text-center py-4 text-sm text-gray-500">모든 상품을 확인했습니다</div>'}
     </div>
   `;
 }
