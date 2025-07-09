@@ -1,5 +1,5 @@
-import { initSearchParamsListener } from "./features/common/search-params/search-params-store.js";
-import { createRouter } from "./router/create-router.js";
+import { createRouter } from "./router/create-router";
+import { initSearchParamsListener } from "../src/features/common/search-params/search-params-store";
 
 const main = () => {
   createRouter();
