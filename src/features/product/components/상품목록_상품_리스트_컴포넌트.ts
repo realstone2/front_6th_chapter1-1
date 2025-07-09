@@ -1,6 +1,6 @@
 import { Component } from "../../../../componet";
 import { ProductListResponse } from "../../../api/productApi";
-import { productStore } from "../store/product-store";
+import { productStore } from "../model/product-store";
 import { 상품_아이템_컴포넌트 } from "./상품_아이템_컴포넌트";
 
 export class 상품목록_상품_리스트_컴포넌트 extends Component {

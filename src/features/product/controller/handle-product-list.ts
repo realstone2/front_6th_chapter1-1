@@ -1,7 +1,7 @@
 import { getProducts } from "../../../api/productApi";
 import { searchParamsStore } from "../../common/search-params/search-params-store";
 
-import { productStore } from "../store/product-store";
+import { productStore } from "../model/product-store";
 
 export const handleProductList = () => {
   return searchParamsStore.subscribe(async () => {

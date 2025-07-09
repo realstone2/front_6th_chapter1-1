@@ -3,7 +3,7 @@ import { 상품목록_로딩컴포넌트 } from "../features/product/components/
 import { 상품목록_메인레이아웃 } from "../features/product/components/상품목록_메인레이아웃";
 import { 상품목록_상품_리스트_컴포넌트 } from "../features/product/components/상품목록_상품_리스트_컴포넌트";
 import { handleProductList } from "../features/product/controller/handle-product-list";
-import { productStore } from "../features/product/store/product-store";
+import { productStore } from "../features/product/model/product-store";
 
 import { throttle } from "../utils/throttle";
 import { 상품목록_하단_섹션 } from "../features/product/components/상품목록_하단_섹션";
