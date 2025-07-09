@@ -1,6 +1,7 @@
 import { Component } from "../../../../componet";
 import { throttle } from "../../../utils/throttle";
 import { searchParamsStore } from "../../common/search-params/search-params-store";
+import { productStore } from "../../product/model/product-store";
 import { handleCategoryList } from "../controller/handle-category-list";
 import { categoryStore } from "../model/category-store";
 
@@ -10,7 +11,6 @@ export class 카테고리_필터_섹션 extends Component {
   render(): HTMLElement {
     const container = document.createElement("section");
 
-    console.log("🐶 jindol log ", categoryStore.value.isLoading);
     if (categoryStore.value.isLoading) {
       container.innerHTML = /* HTML */ ` <div class="flex items-center gap-2">
           <label class="text-sm text-gray-600">카테고리:</label>
@@ -76,14 +76,29 @@ export class 카테고리_필터_섹션 extends Component {
       const params = new URLSearchParams(window.location.search);
 
       if (target.dataset.breadcrumb === "reset") {
+        productStore.setValue((prev) => ({
+          ...prev,
+          isLoading: true,
+          data: [],
+        }));
         params.delete("category1");
         params.delete("category2");
       }
       if (target.dataset.category1) {
+        productStore.setValue((prev) => ({
+          ...prev,
+          isLoading: true,
+          data: [],
+        }));
         params.set("category1", target.dataset.category1 ?? "");
         params.delete("category2");
       }
       if (target.dataset.category2) {
+        productStore.setValue((prev) => ({
+          ...prev,
+          isLoading: true,
+          data: [],
+        }));
         params.set("category2", target.dataset.category2 ?? "");
       }
 
@@ -96,7 +111,18 @@ export class 카테고리_필터_섹션 extends Component {
 
   componentDidMount(): void {
     handleCategoryList();
-    this.unsubscribeList.push(categoryStore.subscribe(throttle(() => this.update(), 200)));
+
+    this.unsubscribeList.push(
+      categoryStore.subscribe(() => {
+        this.update();
+      }),
+    );
+
+    this.unsubscribeList.push(
+      searchParamsStore.subscribe(() => {
+        this.update();
+      }),
+    );
   }
 
   componentWillUnmount(): void {
