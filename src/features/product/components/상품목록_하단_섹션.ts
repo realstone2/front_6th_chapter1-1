@@ -5,6 +5,8 @@ import { throttle } from "../../../utils/throttle";
 import { Component } from "../../../../componet";
 
 export class 상품목록_하단_섹션 extends Component {
+  unsubscribeList: Array<() => void> = [];
+
   observer: IntersectionObserver | null = null;
 
   render(): HTMLElement {
@@ -30,6 +32,8 @@ export class 상품목록_하단_섹션 extends Component {
           <span class="text-sm text-gray-600">상품을 불러오는 중...</span>
         </div>
       </div>`;
+
+      this.registerObserver(element);
     } else {
       element.innerHTML = '<div class="text-center py-4 text-sm text-gray-500">모든 상품을 확인했습니다</div>';
     }
@@ -45,18 +49,19 @@ export class 상품목록_하단_섹션 extends Component {
     const prevPage = parseInt(searchParams.get("page") || "1", 10);
     searchParams.set("page", (prevPage + 1).toString());
     window.history.replaceState({}, "", `?${searchParams.toString()}`);
-  }, 1500);
+  }, 300);
 
-  registerObserver() {
-    const observerTarget = document.getElementById("observer-target");
-    if (!observerTarget) {
-      return;
+  registerObserver(observerTarget: HTMLElement) {
+    // 기존 옵저버가 있으면 disconnect
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
     }
-
     this.observer = new IntersectionObserver((entries, obs) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           this.goNextPage();
+          obs.unobserve(observerTarget);
         }
       });
     });
@@ -64,13 +69,15 @@ export class 상품목록_하단_섹션 extends Component {
   }
 
   componentDidMount() {
-    this.registerObserver();
-  }
-  onUpdate(): void {
-    this.registerObserver();
+    this.unsubscribeList.push(
+      productStore.subscribe(() => {
+        this.update();
+      }),
+    );
   }
 
   componentWillUnmount() {
+    this.unsubscribeList.forEach((unsubscribe) => unsubscribe());
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;

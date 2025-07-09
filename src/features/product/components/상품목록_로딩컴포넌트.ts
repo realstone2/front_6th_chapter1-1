@@ -1,9 +1,19 @@
 // 로딩 상태에서 상품 목록 영역에 보여줄 스켈레톤 UI
 import { Component } from "../../../../componet";
+import { productStore } from "../model/product-store";
 
 export class 상품목록_로딩컴포넌트 extends Component {
+  subscribeStoreList: Array<() => void> = [];
+
   render(): HTMLElement {
+    const { isLoading, data } = productStore.value;
+
     const el = document.createElement("div");
+
+    if (!isLoading || data.length) {
+      return el;
+    }
+
     el.innerHTML = /* HTML */ `
       <div class="grid grid-cols-2 gap-4 mb-6" id="products-grid">
         <!-- 로딩 스켈레톤 4개 -->
@@ -39,5 +49,17 @@ export class 상품목록_로딩컴포넌트 extends Component {
       </div>
     `;
     return el;
+  }
+
+  componentDidMount() {
+    this.subscribeStoreList.push(
+      productStore.subscribe(() => {
+        this.update();
+      }),
+    );
+  }
+
+  componentWillUnmount() {
+    this.subscribeStoreList.forEach((unsubscribe) => unsubscribe());
   }
 }
