@@ -48,7 +48,9 @@ export interface GetProductsParams {
 export async function getProducts(): Promise<ProductListResponse> {
   const params = searchParamsStore.value;
 
-  const { page = "1", limit = "20", search = "", category1 = "", category2 = "", sort = "price_asc" } = params ?? {};
+  const { limit = "20", search = "", category1 = "", category2 = "", sort = "price_asc" } = params ?? {};
+
+  const page = params?.current ?? params?.page ?? "1";
 
   const searchParams = new URLSearchParams({
     page: page,
