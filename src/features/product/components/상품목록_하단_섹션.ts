@@ -44,7 +44,7 @@ export const 상품목록_하단_섹션 = () => {
 
     searchParams.set("page", (prevPage + 1).toString());
 
-    window.history.pushState({}, "", `?${searchParams.toString()}`);
+    window.history.replaceState({}, "", `?${searchParams.toString()}`);
   }, 1500);
 
   const observer = new IntersectionObserver((entries, obs) => {
