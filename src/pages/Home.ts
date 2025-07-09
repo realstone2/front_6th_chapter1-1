@@ -1,45 +1,83 @@
-import { ProductListResponse } from "../api/productApi";
+import { Component } from "../../componet";
 import { 상품목록_로딩컴포넌트 } from "../features/product/components/상품목록_로딩컴포넌트";
 import { 상품목록_메인레이아웃 } from "../features/product/components/상품목록_메인레이아웃";
 import { 상품목록_상품_리스트_컴포넌트 } from "../features/product/components/상품목록_상품_리스트_컴포넌트";
 import { handleProductList } from "../features/product/controller/handle-product-list";
-
 import { productStore } from "../features/product/store/product-store";
-import { clearSubscribers } from "../store/create-store";
+
 import { throttle } from "../utils/throttle";
 import { 상품목록_하단_섹션 } from "../features/product/components/상품목록_하단_섹션";
+import { searchParamsStore } from "../features/common/search-params/search-params-store";
 
-//TODO: 스토어 핸들링쪽 리팩토링
-/**
- * Home
- **/
-export async function Home() {
-  const root = document.getElementById("root");
-  if (!root) return;
+export class HomeComponent extends Component {
+  상품_리스트_컴포넌트 = new 상품목록_상품_리스트_컴포넌트();
+  로딩_컴포넌트 = new 상품목록_로딩컴포넌트();
+  상품목록_하단_섹션 = new 상품목록_하단_섹션();
 
-  root.innerHTML = 상품목록_메인레이아웃();
+  unsubscribeList: Array<() => void> = [];
 
-  handleProductList();
+  renderItem() {
+    this.상품_리스트_컴포넌트.unmount();
+    this.로딩_컴포넌트.unmount();
+    this.상품목록_하단_섹션.unmount();
 
-  productStore.subscribe(throttle(render, 200));
+    const container = document.getElementById("product-container");
 
-  return clearSubscribers;
-}
+    if (!container) {
+      return;
+    }
 
-const render = () => {
-  const container = document.getElementById("product-container");
-  if (!container) return;
+    const { isLoading, data } = productStore.value;
 
-  const { isLoading, data } = productStore.value;
+    if (isLoading && !data.length) {
+      this.상품_리스트_컴포넌트.unmount();
+      this.상품목록_하단_섹션.unmount();
 
-  container.innerHTML = "";
+      if (!this.로딩_컴포넌트.isMounted) {
+        this.로딩_컴포넌트.mount(container);
+      }
+      this.로딩_컴포넌트.update();
+      return;
+    }
 
-  if (isLoading && !data.length) {
-    container.innerHTML = `${상품목록_로딩컴포넌트()}`;
-    return;
+    this.로딩_컴포넌트.unmount();
+
+    if (!this.상품_리스트_컴포넌트.isMounted) {
+      this.상품_리스트_컴포넌트.mount(container);
+    }
+    if (!this.상품목록_하단_섹션.isMounted) {
+      this.상품목록_하단_섹션.mount(container);
+    }
+    this.상품_리스트_컴포넌트.update();
+    this.상품목록_하단_섹션.update();
   }
 
-  container.innerHTML = 상품목록_상품_리스트_컴포넌트(data);
+  render(): HTMLElement {
+    const el = document.createElement("div");
+    el.innerHTML = 상품목록_메인레이아웃();
+    return el;
+  }
 
-  상품목록_하단_섹션();
-};
+  componentDidMount() {
+    handleProductList();
+
+    this.unsubscribeList.push(productStore.subscribe(throttle(() => this.update(), 200)));
+    this.unsubscribeList.push(searchParamsStore.subscribe(throttle(() => this.update(), 200)));
+
+    this.unsubscribeList.push(() => {
+      this.상품_리스트_컴포넌트.unmount();
+      this.로딩_컴포넌트.unmount();
+      this.상품목록_하단_섹션.unmount();
+    });
+
+    this.renderItem();
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeList.forEach((unsubscribe) => unsubscribe());
+  }
+
+  update() {
+    this.renderItem();
+  }
+}

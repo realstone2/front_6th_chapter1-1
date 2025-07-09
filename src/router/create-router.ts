@@ -1,65 +1,67 @@
 import { NotFound } from "../features/common/components/NotFound";
-import { Home } from "../pages/Home";
+import { HomeComponent } from "../pages/Home";
 import { ProductDetail } from "../pages/product/ProductDetail";
-let currentCleanup: (() => void) | null = null;
+import { Component } from "../../componet";
+
+let currentComponent: InstanceType<typeof Component> | null = null;
 
 const routes: Array<{
   path: string;
-  render: () => Promise<() => void | void> | (() => void) | void;
+  component: new (...args: any[]) => Component;
 }> = [
   {
     path: "/",
-    render: Home,
+    component: HomeComponent,
   },
-  {
-    path: "/product/:productID",
-    render: ProductDetail,
-  },
-  {
-    path: "*",
-    render: NotFound,
-  },
+  // {
+  //   path: "/product/:productID",
+  //   component: ProductDetail,
+  // },
+  // {
+  //   path: "*",
+  //   component: NotFound,
+  // },
 ];
 
-function findRoute(pathname) {
+function findRoute(pathname: string) {
   for (const route of routes) {
-    // /product/:id → ^/product/[^/]+$
     const regexPath = route.path.replace(/:([^/]+)/g, "[^/]+");
-    const regex = new RegExp("^" + regexPath + "$");
+    const regex = new RegExp("^" + regexPath + "$", "i");
     if (regex.test(pathname)) {
       return route;
     }
   }
-  // 404 fallback
   return routes.find((r) => r.path === "*");
 }
 
-// 라우터 함수
-async function router() {
-  if (currentCleanup) {
-    currentCleanup();
-    currentCleanup = null;
+function getAppRoot() {
+  return document.getElementById("root") || document.body;
+}
+
+function router() {
+  if (currentComponent) {
+    currentComponent.unmount();
+    currentComponent = null;
   }
-
   const route = findRoute(window.location.pathname);
-
-  if (!route?.render) {
+  if (!route?.component) {
     return;
   }
 
-  const cleanUp = await route?.render();
+  const appRoot = getAppRoot();
 
-  if (typeof cleanUp === "function") {
-    currentCleanup = cleanUp;
+  if (!appRoot) {
+    return;
   }
+
+  currentComponent = new route.component();
+  currentComponent.mount(appRoot);
 }
 
 export function createRouter() {
   document.body.addEventListener("click", (e) => {
-    //TODO: agent가 잘못 짜준 코드 수정하기
-    const a = e.target?.closest("a[data-link]");
-    if (a && a.href) {
-      // 외부 링크/파일 다운로드 등은 무시
+    const a = (e.target as HTMLElement)?.closest("a[data-link]");
+    if (a && a instanceof HTMLAnchorElement && a.href) {
       if (a.host !== location.host) return;
       e.preventDefault();
       if (a.getAttribute("href") !== location.pathname) {
@@ -69,6 +71,5 @@ export function createRouter() {
     }
   });
   window.addEventListener("popstate", router);
-
   router();
 }

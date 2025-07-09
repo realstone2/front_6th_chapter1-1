@@ -4,7 +4,7 @@ import { searchParamsStore } from "../../common/search-params/search-params-stor
 import { productStore } from "../store/product-store";
 
 export const handleProductList = () => {
-  searchParamsStore.subscribe(async () => {
+  return searchParamsStore.subscribe(async () => {
     const params = searchParamsStore.value;
 
     //TODO: limit을 수정할 때 기존 store 데이터를 초기화시키는 로직 필요(?)

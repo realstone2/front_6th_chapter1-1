@@ -1,5 +1,4 @@
 export abstract class Component<P extends object = {}> {
-  public test = false;
   public isMounted = false;
 
   el: HTMLElement;
