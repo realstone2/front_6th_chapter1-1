@@ -8,11 +8,13 @@ import { productStore } from "../features/product/model/product-store";
 import { throttle } from "../utils/throttle";
 import { 상품목록_하단_섹션 } from "../features/product/components/상품목록_하단_섹션";
 import { searchParamsStore } from "../features/common/search-params/search-params-store";
+import { 카테고리_필터_섹션 } from "../features/category/components/카테고리_필터_섹션";
 
 export class HomeComponent extends Component {
   상품_리스트_컴포넌트 = new 상품목록_상품_리스트_컴포넌트();
   로딩_컴포넌트 = new 상품목록_로딩컴포넌트();
   상품목록_하단_섹션 = new 상품목록_하단_섹션();
+  카테고리_필터_섹션 = new 카테고리_필터_섹션();
 
   unsubscribeList: Array<() => void> = [];
 
@@ -20,6 +22,15 @@ export class HomeComponent extends Component {
     this.상품_리스트_컴포넌트.unmount();
     this.로딩_컴포넌트.unmount();
     this.상품목록_하단_섹션.unmount();
+    this.카테고리_필터_섹션.unmount();
+
+    const categoryContainer = document.getElementById("category-filter-space");
+
+    if (this.카테고리_필터_섹션.isMounted) {
+      this.카테고리_필터_섹션.update();
+    } else {
+      this.카테고리_필터_섹션.mount(categoryContainer!);
+    }
 
     const container = document.getElementById("product-container");
 
@@ -62,7 +73,6 @@ export class HomeComponent extends Component {
     handleProductList();
 
     this.unsubscribeList.push(productStore.subscribe(throttle(() => this.update(), 200)));
-    this.unsubscribeList.push(searchParamsStore.subscribe(throttle(() => this.update(), 200)));
 
     this.unsubscribeList.push(() => {
       this.상품_리스트_컴포넌트.unmount();
@@ -75,6 +85,7 @@ export class HomeComponent extends Component {
 
   componentWillUnmount() {
     this.unsubscribeList.forEach((unsubscribe) => unsubscribe());
+    this.unsubscribeList = [];
   }
 
   update() {

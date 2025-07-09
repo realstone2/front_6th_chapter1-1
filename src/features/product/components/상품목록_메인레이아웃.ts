@@ -53,17 +53,7 @@ export function 상품목록_메인레이아웃() {
           <!-- 필터 옵션 -->
           <div class="space-y-3">
             <!-- 카테고리 필터 -->
-            <div class="space-y-2">
-              <div class="flex items-center gap-2">
-                <label class="text-sm text-gray-600">카테고리:</label>
-                <button data-breadcrumb="reset" class="text-xs hover:text-blue-800 hover:underline">전체</button>
-              </div>
-              <!-- 1depth 카테고리 -->
-              <div class="flex flex-wrap gap-2" id="category1-area">
-                <!-- 카테고리 영역: 로딩/완료 상태에 따라 다름 -->
-              </div>
-              <!-- 2depth 카테고리 -->
-            </div>
+            <div id="category-filter-space" class="space-y-2"></div>
             <!-- 기존 필터들 -->
             <div class="flex gap-2 items-center justify-between">
               <!-- 페이지당 상품 수 -->
