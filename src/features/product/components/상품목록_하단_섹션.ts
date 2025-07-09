@@ -1,6 +1,6 @@
 import { searchParamsStore } from "../../common/search-params/search-params-store";
 import { 다음_페이지_로딩_컴포넌트 } from "./다음_페이지_로딩_컴포넌트";
-import { productStore } from "../store/product-store";
+import { productStore } from "../model/product-store";
 import { throttle } from "../../../utils/throttle";
 import { Component } from "../../../../componet";
 
