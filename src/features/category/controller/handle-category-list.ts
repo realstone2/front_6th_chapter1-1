@@ -1,18 +1,16 @@
 import { getCategories } from "../../../api/productApi";
 import { categoryStore } from "../model/category-store";
 
-export const handleCategoryList = () => {
-  return async () => {
-    categoryStore.setValue((prev) => ({
-      ...prev,
-      isLoading: true,
-    }));
+export const handleCategoryList = async () => {
+  categoryStore.setValue((prev) => ({
+    ...prev,
+    isLoading: true,
+  }));
 
-    const response = await getCategories();
+  const response = await getCategories();
 
-    categoryStore.setValue((prev) => ({
-      isLoading: false,
-      data: response,
-    }));
-  };
+  categoryStore.setValue((prev) => ({
+    isLoading: false,
+    data: response,
+  }));
 };
