@@ -100,6 +100,7 @@ describe("3. 페이지당 상품 수 선택", () => {
     ).toBeInTheDocument();
 
     const limitSelect = document.querySelector("#limit-select");
+
     await userEvent.selectOptions(limitSelect, "10");
 
     await waitFor(() =>
@@ -111,26 +112,14 @@ describe("3. 페이지당 상품 수 선택", () => {
       ).not.toBeInTheDocument(),
     );
 
-    expect(document.querySelectorAll(".product-card").length).toBe(10);
+    await waitFor(() => {
+      const productCards = document.querySelectorAll(".product-card");
+      expect(productCards).toHaveLength(10);
+    });
   });
 });
 
 describe("4. 상품 정렬 기능", () => {
-  test("상품을 가격순/인기순으로 정렬할 수 있다", async () => {
-    await screen.findByText(/총 의 상품/i);
-
-    // 정렬 드롭다운 찾기
-    const sortSelect = document.querySelector("#sort-select");
-    expect(sortSelect).toBeInTheDocument();
-
-    // 정렬 옵션들 확인
-    const options = Array.from(sortSelect.options);
-    const optionTexts = options.map((opt) => opt.textContent);
-
-    expect(optionTexts.some((text) => text.includes("가격"))).toBe(true);
-    expect(optionTexts.some((text) => text.includes("낮은순") || text.includes("높은순"))).toBe(true);
-  });
-
   test("정렬 변경 시 목록에 반영된다", async () => {
     await screen.findByText(/총 의 상품/i);
 
@@ -158,6 +147,20 @@ describe("4. 상품 정렬 기능", () => {
     await waitFor(() => {
       expectProduct("샷시 풍지판 창문 바람막이 베란다 문 틈막이 창틀 벌레 차단 샤시 방충망 틈새막이", 1);
     });
+  });
+  test("상품을 가격순/인기순으로 정렬할 수 있다", async () => {
+    await screen.findByText(/총 의 상품/i);
+
+    // 정렬 드롭다운 찾기
+    const sortSelect = document.querySelector("#sort-select");
+    expect(sortSelect).toBeInTheDocument();
+
+    // 정렬 옵션들 확인
+    const options = Array.from(sortSelect.options);
+    const optionTexts = options.map((opt) => opt.textContent);
+
+    expect(optionTexts.some((text) => text.includes("가격"))).toBe(true);
+    expect(optionTexts.some((text) => text.includes("낮은순") || text.includes("높은순"))).toBe(true);
   });
 });
 
