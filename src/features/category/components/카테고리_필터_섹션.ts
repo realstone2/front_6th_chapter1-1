@@ -13,10 +13,8 @@ export class 카테고리_필터_섹션 extends Component {
 
     if (categoryStore.value.isLoading) {
       container.innerHTML = /* HTML */ ` <div class="flex items-center gap-2">
-          <label class="text-sm text-gray-600">카테고리:</label>
-          <button data-breadcrumb="reset" class="text-xs hover:text-blue-800 hover:underline">전체</button>
-        </div>
-        <div class="flex flex-wrap gap-2" id="category1-area">카테고리 로딩 중...</div>`;
+        <div class="flex flex-wrap gap-2" id="category1-area">카테고리 로딩 중...</div>
+      </div>`;
       return container;
     }
 
