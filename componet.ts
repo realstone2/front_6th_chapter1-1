@@ -42,9 +42,7 @@ export abstract class Component<P extends object = {}> {
 
     this.componentWillUnmount();
 
-    if (this.parentEl && this.parentEl.contains(this.el)) {
-      this.parentEl.removeChild(this.el);
-    }
+    this.el.remove();
 
     this.isMounted = false;
   }
