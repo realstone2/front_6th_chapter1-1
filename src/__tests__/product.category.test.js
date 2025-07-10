@@ -44,6 +44,8 @@ describe("7. 카테고리 선택", () => {
     await screen.findByText("카테고리:");
     const category1 = screen.getByText("생활/건강");
     await userEvent.click(category1);
+    expect(await screen.findByText("300개")).toBeInTheDocument();
+
     const category2 = await screen.findByText("자동차용품");
     await userEvent.click(category2);
 
