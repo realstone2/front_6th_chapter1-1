@@ -70,25 +70,6 @@ describe("2. 상품 목록 조회", () => {
 });
 
 describe("3. 페이지당 상품 수 선택", () => {
-  test("드롭다운에서 10, 20, 50, 100개 중 선택할 수 있으며 기본값은 20개이다", async () => {
-    // 상품이 로드될 때까지 대기
-    await screen.findByText(/총 의 상품/i);
-
-    // 페이지당 상품 수 선택 드롭다운 찾기
-    const limitSelect = document.querySelector("#limit-select");
-    expect(limitSelect).toBeInTheDocument();
-
-    // 기본값이 20개인지 확인
-    expect(limitSelect.value).toBe("20");
-
-    // 옵션들이 올바르게 있는지 확인
-    const options = Array.from(limitSelect.options).map((opt) => opt.value);
-    expect(options).toContain("10");
-    expect(options).toContain("20");
-    expect(options).toContain("50");
-    expect(options).toContain("100");
-  });
-
   test("선택 변경 시 즉시 목록에 반영된다", async () => {
     await screen.findByText(/총 의 상품/i);
 
@@ -116,6 +97,25 @@ describe("3. 페이지당 상품 수 선택", () => {
       const productCards = document.querySelectorAll(".product-card");
       expect(productCards).toHaveLength(10);
     });
+  });
+
+  test("드롭다운에서 10, 20, 50, 100개 중 선택할 수 있으며 기본값은 20개이다", async () => {
+    // 상품이 로드될 때까지 대기
+    await screen.findByText(/총 의 상품/i);
+
+    // 페이지당 상품 수 선택 드롭다운 찾기
+    const limitSelect = document.querySelector("#limit-select");
+    expect(limitSelect).toBeInTheDocument();
+
+    // 기본값이 20개인지 확인
+    expect(limitSelect.value).toBe("20");
+
+    // 옵션들이 올바르게 있는지 확인
+    const options = Array.from(limitSelect.options).map((opt) => opt.value);
+    expect(options).toContain("10");
+    expect(options).toContain("20");
+    expect(options).toContain("50");
+    expect(options).toContain("100");
   });
 });
 
