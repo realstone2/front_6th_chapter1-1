@@ -40,6 +40,8 @@ function getAppRoot() {
 
 function router() {
   if (currentComponent) {
+    const root = getAppRoot();
+    root.innerHTML = "";
     currentComponent.unmount();
     currentComponent = null;
   }
