@@ -183,15 +183,6 @@ describe("5. 무한 스크롤 페이지네이션", () => {
 });
 
 describe("6. 상품 검색", () => {
-  test("상품명 기반 검색을 위한 텍스트 입력 필드가 있다", async () => {
-    await screen.findByText(/총 의 상품/i);
-
-    // 검색 입력 필드 확인
-    const searchInput = document.querySelector("#search-input");
-    expect(searchInput).toBeInTheDocument();
-    expect(searchInput.placeholder).toMatch(/검색/i);
-  });
-
   test("Enter 키로 검색이 수행할 수 있으며, 검색어와 일치하는 상품들만 목록에 표시된다", async () => {
     await screen.findByText(/총 의 상품/i);
 
@@ -206,5 +197,14 @@ describe("6. 상품 검색", () => {
     expect(getByRole(productCards[0], "heading", { level: 3, name: /젤리/i })).toBeInTheDocument();
     expect(getByRole(productCards[1], "heading", { level: 3, name: /젤리/i })).toBeInTheDocument();
     expect(getByRole(productCards[2], "heading", { level: 3, name: /젤리/i })).toBeInTheDocument();
+  });
+
+  test("상품명 기반 검색을 위한 텍스트 입력 필드가 있다", async () => {
+    await screen.findByText(/총 의 상품/i);
+
+    // 검색 입력 필드 확인
+    const searchInput = document.querySelector("#search-input");
+    expect(searchInput).toBeInTheDocument();
+    expect(searchInput.placeholder).toMatch(/검색/i);
   });
 });
