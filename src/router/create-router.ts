@@ -4,6 +4,8 @@ import { ProductDetailPage } from "../pages/product/ProductDetailPage";
 import { Component } from "../../componet";
 import { Header } from "../features/common/components/Header";
 
+let currentComponentList: Array<InstanceType<typeof Component>> = [];
+
 const routes: Array<{
   path: string;
   component: new (...args: any[]) => Component;
@@ -42,14 +44,15 @@ function getAppRoot() {
   return document.getElementById("root") || document.body;
 }
 
-function router(currentComponentList: Array<InstanceType<typeof Component>> = []) {
-  if (currentComponentList.length) {
+function router() {
+  if (currentComponentList) {
     currentComponentList.map((component) => {
       component.unmount();
     });
     currentComponentList = [];
   }
   const route = findRoute(window.location.pathname);
+
   if (!route?.component) {
     return;
   }
@@ -60,23 +63,21 @@ function router(currentComponentList: Array<InstanceType<typeof Component>> = []
     return;
   }
 
-  currentComponentList = [
+  currentComponentList.push(
     new Header({
       title: route.title,
       canGoBack: route.canGoBack,
     }),
-    new route.component(),
-  ];
+  );
 
-  console.log("🐶 mount componetns lenght ", currentComponentList.length);
+  currentComponentList.push(new route.component());
+
   currentComponentList.forEach((component) => {
     component.mount(appRoot);
   });
 }
 
 export function createRouter() {
-  let currentComponentList: Array<InstanceType<typeof Component>> = [];
-
   document.body.addEventListener("click", (e) => {
     const a = (e.target as HTMLElement)?.closest("a[data-link]");
     if (a && a instanceof HTMLAnchorElement && a.href) {
@@ -92,11 +93,11 @@ export function createRouter() {
       e.preventDefault();
       if (a.getAttribute("href") !== location.pathname) {
         history.pushState({}, "", a.getAttribute("href"));
-        router(currentComponentList);
+        router();
       }
     }
   });
-  window.addEventListener("popstate", router.bind(null, currentComponentList));
+  window.addEventListener("popstate", router);
 
   router();
 }

@@ -9,10 +9,7 @@ export class ProductDetailPage extends Component<{}, { cartCount: number }> {
   subscribeStoreList: Array<() => void> = [];
 
   constructor(props?: {}) {
-    super(props);
-    this.state = {
-      cartCount: 1,
-    };
+    super(props, { cartCount: 1 });
   }
 
   render(): HTMLElement {
@@ -62,7 +59,7 @@ export class ProductDetailPage extends Component<{}, { cartCount: number }> {
 
       this.state = {
         ...this.state,
-        cartCount: Math.min(this.state.cartCount + 1, productDetailStore.value.data?.stock ?? 1),
+        cartCount: Math.max(1, Math.min(isNaN(value) ? 1 : value, productDetailStore.value.data?.stock ?? 1)),
       };
     });
 
@@ -113,15 +110,12 @@ const 상세페이지_로딩완료 = (product: ProductDetail | null, cartCount: 
             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
-            <button class="breadcrumb-link" data-category1="${product.category1}">
-              ${product.category1}
-            </button>
+              <a href="/?category1=${product.category1}" data-link="" class="hover:text-blue-600 transition-colors"> ${product.category1}</a>
+
             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
-            <button class="breadcrumb-link" data-category2="${product.category2}">
-              ${product.category2}
-            </button>
+             <a href="/?category1=${product.category1}&category2=${product.category2}" data-link="" class="hover:text-blue-600 transition-colors"> ${product.category2}</a>
           </div>
         </nav>
         <!-- 상품 상세 정보 -->
