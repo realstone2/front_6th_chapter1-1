@@ -54,9 +54,8 @@ function router() {
     });
     currentComponentList = [];
   }
-  console.log("🐶 jindol log ", window.location.pathname);
+
   const route = findRoute(window.location.pathname);
-  console.log("🚀 ~ router ~ route:", route);
 
   if (!route?.component) {
     return;
