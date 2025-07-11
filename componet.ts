@@ -18,8 +18,9 @@ export abstract class Component<P extends object = {}, S extends object = {}> {
 
   protected _props: P;
 
-  constructor(props?: P) {
+  constructor(props?: P, initialState?: S) {
     this._props = props ?? ({} as P);
+    this._state = initialState ?? ({} as S); // state 초기화 추가
     this.el = this.render();
   }
 
@@ -57,7 +58,6 @@ export abstract class Component<P extends object = {}, S extends object = {}> {
     this.el.remove();
 
     this.isMounted = false;
-    this.state = {} as S;
   }
 
   onUpdate() {}
