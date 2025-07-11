@@ -1,5 +1,5 @@
 import { Component } from "../../../componet";
-import { EventDelegator } from "../../../Event-delegator";
+import { EventDelegator } from "../../../event-delegator";
 import { handleProductDetail } from "../../features/product/controller/handle-product-detail";
 import { productDetailStore } from "../../features/product/model/product-detail-store";
 import { RelatedProductList } from "./RelatedProductList";

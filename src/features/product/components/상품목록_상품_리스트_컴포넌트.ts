@@ -2,7 +2,7 @@ import { Component } from "../../../../componet";
 
 import { productStore } from "../model/product-store";
 import { cartStore } from "../../cart/model/cartStore";
-import { EventDelegator } from "../../../../Event-delegator";
+import { EventDelegator } from "../../../../event-delegator";
 import { getCartAction } from "../../cart/controller/get-cart-action";
 
 export class 상품목록_상품_리스트_컴포넌트 extends Component {

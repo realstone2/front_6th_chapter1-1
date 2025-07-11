@@ -1,5 +1,5 @@
 import { Component } from "../../../../componet";
-import { EventDelegator } from "../../../../Event-delegator";
+import { EventDelegator } from "../../../../event-delegator";
 import { cartStore } from "../../cart/model/cartStore";
 
 type HeaderProps = {

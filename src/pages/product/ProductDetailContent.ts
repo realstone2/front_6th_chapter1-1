@@ -2,7 +2,7 @@ import { Component } from "../../../componet";
 import type { ProductDetail } from "../../api/productApi";
 import { productDetailStore } from "../../features/product/model/product-detail-store";
 import { getCartAction } from "../../features/cart/controller/get-cart-action";
-import { EventDelegator } from "../../../Event-delegator";
+import { EventDelegator } from "../../../event-delegator";
 
 export class ProductDetailContent extends Component<{}, { cartCount: number; product: ProductDetail | null }> {
   constructor() {
