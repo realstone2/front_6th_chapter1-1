@@ -1,7 +1,8 @@
 import { Component } from "../../../../componet";
-import { ProductListResponse } from "../../../api/productApi";
+
 import { productStore } from "../model/product-store";
-import { 상품_아이템_컴포넌트 } from "./상품_아이템_컴포넌트";
+import { cartStore } from "../../cart/model/cartStore";
+import { EventDelegator } from "../../../../Event-delegator";
 
 export class 상품목록_상품_리스트_컴포넌트 extends Component {
   subscribeStoreList: Array<() => void> = [];
@@ -22,7 +23,49 @@ export class 상품목록_상품_리스트_컴포넌트 extends Component {
           총 <span class="font-medium text-gray-900">${productStore.value.data[0]?.pagination?.total}개</span>의 상품
         </div>
         <div class="grid grid-cols-2 gap-4 mb-6" id="products-grid">
-          ${products.map((product) => 상품_아이템_컴포넌트(product)).join("")}
+          ${products
+            .map(
+              (product) =>
+                /* HTML */
+                `<a
+                  href="/product/${product.productId}"
+                  class="block bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden product-card"
+                  data-link
+                  data-product-id="${product.productId}"
+                  style="text-decoration: none; color: inherit;"
+                >
+                  <!-- 상품 이미지 -->
+                  <div class="aspect-square bg-gray-100 overflow-hidden cursor-pointer product-image">
+                    <img
+                      src=${product.image}
+                      alt="${product.title}"
+                      class="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+                      loading="lazy"
+                    />
+                  </div>
+                  <!-- 상품 정보 -->
+                  <div class="p-3">
+                    <div class="cursor-pointer product-info mb-3">
+                      <h3 class="text-sm font-medium text-gray-900 line-clamp-2 mb-1">${product.title}</h3>
+                      <p class="text-xs text-gray-500 mb-2">${product.mallName}</p>
+                      <p class="text-lg font-bold text-gray-900">
+                        ${product.lprice ? `${product.lprice}원` : `${product.hprice}원`}
+                      </p>
+                    </div>
+                    <!-- 장바구니 버튼 -->
+                    <button
+                      event-id="add-to-cart"
+                      class="w-full bg-blue-600 text-white text-sm py-2 px-3 rounded-md
+                         hover:bg-blue-700 transition-colors add-to-cart-btn"
+                      data-product-id="${product.productId}"
+                      type="button"
+                    >
+                      장바구니 담기
+                    </button>
+                  </div>
+                </a>`,
+            )
+            .join("")}
         </div>
       </div>
     `;
@@ -35,9 +78,24 @@ export class 상품목록_상품_리스트_컴포넌트 extends Component {
         this.update();
       }),
     );
+    EventDelegator.getInstance().register("click", "add-to-cart", (e) => {
+      const target = (e.target as HTMLElement).closest(".add-to-cart-btn");
+      if (!target) return;
+
+      const productId = target.getAttribute("data-product-id");
+      if (!productId) return;
+      const product = productStore.value.data.flatMap((v) => v.products).find((p) => p.productId === productId);
+      if (!product) return;
+
+      cartStore.setValue((prev) => ({
+        ...prev,
+        productList: [...prev.productList, product],
+      }));
+    });
   }
 
   componentWillUnmount() {
+    EventDelegator.getInstance().unregister("click", "add-to-cart");
     this.subscribeStoreList.forEach((unsubscribe) => unsubscribe());
   }
 }
