@@ -44,13 +44,36 @@ export const createPersistStore = <T extends object | unknown[]>(key: string, in
   const storedValue = localStorage.getItem(key);
   const parsedValue = storedValue ? JSON.parse(storedValue) : initValue;
 
-  const store = createStore(parsedValue);
+  let value = parsedValue;
+  let listeners: Listener[] = [];
 
   return {
-    ...store,
+    get value() {
+      return value;
+    },
+
     setValue: (updater: T | ((prev: T) => T)) => {
-      store.setValue(updater);
-      localStorage.setItem(key, JSON.stringify(store.value));
+      if (typeof updater === "function") {
+        value = updater(value);
+        localStorage.setItem(key, JSON.stringify(value));
+      } else {
+        value = updater;
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+      listeners.forEach((listener) => listener());
+    },
+
+    subscribe: (listener: Listener) => {
+      listeners.push(listener);
+      // 클린업 함수 반환
+
+      const cleanUpCallback = () => {
+        listeners = listeners.filter((l) => l !== listener);
+      };
+
+      cleanUpListenerList.add(cleanUpCallback);
+
+      return cleanUpCallback;
     },
   };
 };
