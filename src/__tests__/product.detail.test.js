@@ -8,7 +8,7 @@ const goTo = (path) => {
 };
 
 beforeAll(async () => {
-  document.body.innerHTML = '<div id="root"></div>';
+  document.body.innerHTML = '<div id="root" class="min-h-screen bg-gray-50"></div>';
   await import("../main.js");
 });
 
@@ -39,7 +39,8 @@ const 상품_상세페이지_접속 = async () => {
 
 describe("1. 상품 클릭시 상세 페이지 이동", () => {
   test("상품 목록에서 상품 이미지 클릭 시 상세 페이지로 이동되며, 상품 이미지, 설명, 가격 등의 상세 정보가 표시된다", async () => {
-    goTo("/");
+    // goTo("/");
+
     await 상품_상세페이지_접속();
 
     // 상품 상세 페이지가 로드되었는지 확인
