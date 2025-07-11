@@ -2,6 +2,7 @@ import { NotFound } from "../features/common/components/NotFound";
 import { HomeComponent } from "../pages/Home";
 import { ProductDetail } from "../pages/product/ProductDetail";
 import { Component } from "../../componet";
+import { Header } from "../features/common/components/Header";
 
 let currentComponent: InstanceType<typeof Component> | null = null;
 
@@ -40,8 +41,6 @@ function getAppRoot() {
 
 function router() {
   if (currentComponent) {
-    const root = getAppRoot();
-    root.innerHTML = "";
     currentComponent.unmount();
     currentComponent = null;
   }
@@ -61,10 +60,20 @@ function router() {
 }
 
 export function createRouter() {
+  const header = new Header();
+
   document.body.addEventListener("click", (e) => {
     const a = (e.target as HTMLElement)?.closest("a[data-link]");
     if (a && a instanceof HTMLAnchorElement && a.href) {
-      if (a.host !== location.host) return;
+      if ((e.target as HTMLElement).closest("[event-id]")) {
+        e.preventDefault();
+        return;
+      }
+
+      if (a.host !== location.host) {
+        return;
+      }
+
       e.preventDefault();
       if (a.getAttribute("href") !== location.pathname) {
         history.pushState({}, "", a.getAttribute("href"));
@@ -73,5 +82,10 @@ export function createRouter() {
     }
   });
   window.addEventListener("popstate", router);
+
+  const app = getAppRoot();
+
+  header.mount(app);
+
   router();
 }
