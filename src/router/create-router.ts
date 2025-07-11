@@ -4,6 +4,8 @@ import { ProductDetailPage } from "../pages/product/ProductDetailPage";
 import { Component } from "../../componet";
 import { Header } from "../features/common/components/Header";
 
+const BASE_PATH = import.meta.env.PROD ? "/front_6th_chapter1-1" : "";
+
 let currentComponentList: Array<InstanceType<typeof Component>> = [];
 
 const routes: Array<{
