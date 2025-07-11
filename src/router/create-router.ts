@@ -15,12 +15,12 @@ const routes: Array<{
   canGoBack?: boolean;
 }> = [
   {
-    path: "/",
+    path: BASE_PATH + "/",
     component: HomeComponent,
     title: "쇼핑몰",
   },
   {
-    path: "/product/:productID",
+    path: BASE_PATH + "/product/:productID",
     component: ProductDetailPage,
     title: "상품 상세",
     canGoBack: true,
