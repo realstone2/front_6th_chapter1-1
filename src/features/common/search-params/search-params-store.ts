@@ -2,7 +2,7 @@
 import { createStore } from "../../../store/create-store";
 
 // 초기 상태: URLSearchParams 객체를 그대로 저장해도 되고, 파싱된 객체 형태로 저장해도 됩니다.
-export const searchParamsStore = createStore<Record<string, string> | null>(null);
+export const searchParamsStore = createStore<Record<string, string> | null>(getSearchParamsFromLocation());
 
 // searchParams를 객체로 파싱
 function getSearchParamsFromLocation(): Record<string, string> {

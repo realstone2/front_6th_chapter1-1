@@ -4,12 +4,10 @@ import { searchParamsStore } from "../../common/search-params/search-params-stor
 import { productStore } from "../model/product-store";
 
 export const handleProductList = () => {
-  return searchParamsStore.subscribe(async () => {
+  const handleStoreUpdate = async () => {
     const params = searchParamsStore.value;
 
     const { limit = "20", search = "", category1 = "", category2 = "", sort = "price_asc" } = params ?? {};
-
-    //TODO: limit을 수정할 때 기존 store 데이터를 초기화시키는 로직 필요(?)
 
     const filterValue = productStore.value.data?.[0]?.filters;
 
@@ -55,5 +53,9 @@ export const handleProductList = () => {
         data: prev.data.concat([response]),
       };
     });
-  });
+  };
+
+  handleStoreUpdate();
+
+  return searchParamsStore.subscribe(handleStoreUpdate);
 };
