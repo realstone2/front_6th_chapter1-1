@@ -1,4 +1,4 @@
-import { NotFound } from "../features/common/components/NotFound";
+import { NotFound } from "../features/common/components/NotFound.ts";
 import { HomeComponent } from "../pages/Home";
 import { ProductDetailPage } from "../pages/product/ProductDetailPage";
 import { Component } from "../../componet";
@@ -23,14 +23,15 @@ const routes: Array<{
     title: "상품 상세",
     canGoBack: true,
   },
-  // {
-  //   path: "*",
-  //   component: NotFound,
-  // },
+  {
+    path: "*",
+    component: NotFound,
+  },
 ];
 
 function findRoute(pathname: string) {
   for (const route of routes) {
+    if (route.path === "*") continue; // "*"는 정규식 처리에서 제외
     const regexPath = route.path.replace(/:([^/]+)/g, "[^/]+");
     const regex = new RegExp("^" + regexPath + "$", "i");
     if (regex.test(pathname)) {
@@ -51,7 +52,9 @@ function router() {
     });
     currentComponentList = [];
   }
+  console.log("🐶 jindol log ", window.location.pathname);
   const route = findRoute(window.location.pathname);
+  console.log("🚀 ~ router ~ route:", route);
 
   if (!route?.component) {
     return;

@@ -28,12 +28,11 @@ export class 상품목록_상품_리스트_컴포넌트 extends Component {
             .map(
               (product) =>
                 /* HTML */
-                `<a
-                  href="/product/${product.productId}"
-                  class="block bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden product-card"
-                  data-link
+                `<div
+                  class="block bg-white p-2 cursor-pointer rounded-lg shadow-sm border border-gray-200 overflow-hidden product-card"
                   data-product-id="${product.productId}"
                   style="text-decoration: none; color: inherit;"
+                  event-id="product-card"
                 >
                   <!-- 상품 이미지 -->
                   <div class="aspect-square bg-gray-100 overflow-hidden cursor-pointer product-image">
@@ -46,25 +45,25 @@ export class 상품목록_상품_리스트_컴포넌트 extends Component {
                   </div>
                   <!-- 상품 정보 -->
                   <div class="p-3">
-                    <div class="cursor-pointer product-info mb-3">
-                      <h3 class="text-sm font-medium text-gray-900 line-clamp-2 mb-1">${product.title}</h3>
-                      <p class="text-xs text-gray-500 mb-2">${product.mallName}</p>
-                      <p class="text-lg font-bold text-gray-900">
-                        ${product.lprice ? `${product.lprice}원` : `${product.hprice}원`}
-                      </p>
-                    </div>
-                    <!-- 장바구니 버튼 -->
-                    <button
-                      event-id="add-to-cart"
-                      class="w-full bg-blue-600 text-white text-sm py-2 px-3 rounded-md
-                         hover:bg-blue-700 transition-colors add-to-cart-btn"
-                      data-product-id="${product.productId}"
-                      type="button"
-                    >
-                      장바구니 담기
-                    </button>
+                    <h3 class="text-sm font-medium text-gray-900 line-clamp-2 mb-1">${product.title}</h3>
+                    <p class="text-xs text-gray-500 mb-2">${product.brand ? product.brand : product.mallName}</p>
+                    <p class="text-lg font-bold text-gray-900">
+                      ${product.lprice
+                        ? `${Number(product.lprice).toLocaleString()}원`
+                        : `${Number(product.hprice).toLocaleString()}원`}
+                    </p>
                   </div>
-                </a>`,
+                  <!-- 장바구니 버튼 -->
+                  <button
+                    event-id="add-to-cart"
+                    class="w-full bg-blue-600 text-white text-sm py-2 px-3 rounded-md
+                       hover:bg-blue-700 transition-colors add-to-cart-btn"
+                    data-product-id="${product.productId}"
+                    type="button"
+                  >
+                    장바구니 담기
+                  </button>
+                </div>`,
             )
             .join("")}
         </div>
@@ -86,6 +85,16 @@ export class 상품목록_상품_리스트_컴포넌트 extends Component {
       const productId = target.getAttribute("data-product-id");
       if (!productId) return;
       getCartAction().addToCart(productId);
+    });
+
+    EventDelegator.getInstance().register("click", "product-card", (e) => {
+      console.log("🐶 jindol log ", "call!!");
+      const target = e.target as HTMLElement;
+      const productId = target.closest(".product-card")?.getAttribute("data-product-id");
+      if (!productId) return;
+
+      history.pushState({}, "", `/product/${productId}`);
+      window.dispatchEvent(new PopStateEvent("popstate"));
     });
   }
 
