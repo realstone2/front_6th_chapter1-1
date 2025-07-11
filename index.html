@@ -19,24 +19,20 @@
     </script>
 
     <script type="text/javascript">
-      var pathSegmentsToKeep = 1;
-      var l = window.location;
-      l.replace(
-        l.protocol +
-          "//" +
-          l.hostname +
-          (l.port ? ":" + l.port : "") +
-          l.pathname
-            .split("/")
-            .slice(0, 1 + pathSegmentsToKeep)
-            .join("/") +
-          "/?/" +
-          l.pathname.slice(1).split("/").slice(pathSegmentsToKeep).join("/").replace(/&/g, "~and~") +
-          (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
-          l.hash,
-      );
+      (function (l) {
+        if (l.search[1] === "/") {
+          var decoded = l.search
+            .slice(1)
+            .split("&")
+            .map(function (s) {
+              return s.replace(/~and~/g, "&");
+            })
+            .join("?");
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
     </script>
-    <script type="module" crossorigin src="/front_6th_chapter1-1/assets/index-MBN8ukNC.js"></script>
+    <script type="module" crossorigin src="/front_6th_chapter1-1/assets/index-D281U-A1.js"></script>
     <link rel="stylesheet" crossorigin href="/front_6th_chapter1-1/assets/index-DVL8oARQ.css">
   </head>
   <body class="bg-gray-50">
