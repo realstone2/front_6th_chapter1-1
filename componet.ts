@@ -1,9 +1,20 @@
-export abstract class Component<P extends object = {}> {
+export abstract class Component<P extends object = {}, S extends object = {}> {
   public isMounted = false;
 
   el: HTMLElement;
 
   parentEl?: HTMLElement;
+
+  protected _state: S;
+
+  get state(): S {
+    return this._state;
+  }
+
+  set state(newState: S) {
+    this._state = newState;
+    this.update();
+  }
 
   protected _props: P;
 
@@ -30,6 +41,7 @@ export abstract class Component<P extends object = {}> {
       return;
     }
     this.parentEl = target;
+
     this.parentEl.appendChild(this.el);
     this.isMounted = true;
     this.componentDidMount();
@@ -45,6 +57,7 @@ export abstract class Component<P extends object = {}> {
     this.el.remove();
 
     this.isMounted = false;
+    this.state = {} as S;
   }
 
   onUpdate() {}
