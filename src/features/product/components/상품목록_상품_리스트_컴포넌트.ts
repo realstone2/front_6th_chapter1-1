@@ -4,6 +4,7 @@ import { productStore } from "../model/product-store";
 import { cartStore } from "../../cart/model/cartStore";
 import { EventDelegator } from "../../../../event-delegator";
 import { getCartAction } from "../../cart/controller/get-cart-action";
+import { BASE_PATH } from "../../../router/create-router";
 
 export class 상품목록_상품_리스트_컴포넌트 extends Component {
   subscribeStoreList: Array<() => void> = [];
@@ -88,12 +89,11 @@ export class 상품목록_상품_리스트_컴포넌트 extends Component {
     });
 
     EventDelegator.getInstance().register("click", "product-card", (e) => {
-      console.log("🐶 jindol log ", "call!!");
       const target = e.target as HTMLElement;
       const productId = target.closest(".product-card")?.getAttribute("data-product-id");
       if (!productId) return;
 
-      history.pushState({}, "", `/product/${productId}`);
+      history.pushState({}, "", `${BASE_PATH}/product/${productId}`);
       window.dispatchEvent(new PopStateEvent("popstate"));
     });
   }

@@ -96,7 +96,7 @@ export function createRouter() {
 
       e.preventDefault();
       if (a.getAttribute("href") !== location.pathname) {
-        history.pushState({}, "", a.getAttribute("href"));
+        history.pushState({}, "", BASE_PATH + a.getAttribute("href"));
         router();
       }
     }
