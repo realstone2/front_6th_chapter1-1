@@ -1,23 +1,26 @@
 import { NotFound } from "../features/common/components/NotFound";
 import { HomeComponent } from "../pages/Home";
-import { ProductDetail } from "../pages/product/ProductDetail";
+import { ProductDetailPage } from "../pages/product/ProductDetailPage";
 import { Component } from "../../componet";
 import { Header } from "../features/common/components/Header";
-
-let currentComponent: InstanceType<typeof Component> | null = null;
 
 const routes: Array<{
   path: string;
   component: new (...args: any[]) => Component;
+  title?: string;
+  canGoBack?: boolean;
 }> = [
   {
     path: "/",
     component: HomeComponent,
+    title: "쇼핑몰",
   },
-  // {
-  //   path: "/product/:productID",
-  //   component: ProductDetail,
-  // },
+  {
+    path: "/product/:productID",
+    component: ProductDetailPage,
+    title: "상품 상세",
+    canGoBack: true,
+  },
   // {
   //   path: "*",
   //   component: NotFound,
@@ -39,10 +42,12 @@ function getAppRoot() {
   return document.getElementById("root") || document.body;
 }
 
-function router() {
-  if (currentComponent) {
-    currentComponent.unmount();
-    currentComponent = null;
+function router(currentComponentList: Array<InstanceType<typeof Component>> = []) {
+  if (currentComponentList.length) {
+    currentComponentList.map((component) => {
+      component.unmount();
+    });
+    currentComponentList = [];
   }
   const route = findRoute(window.location.pathname);
   if (!route?.component) {
@@ -55,12 +60,22 @@ function router() {
     return;
   }
 
-  currentComponent = new route.component();
-  currentComponent.mount(appRoot);
+  currentComponentList = [
+    new Header({
+      title: route.title,
+      canGoBack: route.canGoBack,
+    }),
+    new route.component(),
+  ];
+
+  console.log("🐶 mount componetns lenght ", currentComponentList.length);
+  currentComponentList.forEach((component) => {
+    component.mount(appRoot);
+  });
 }
 
 export function createRouter() {
-  const header = new Header();
+  let currentComponentList: Array<InstanceType<typeof Component>> = [];
 
   document.body.addEventListener("click", (e) => {
     const a = (e.target as HTMLElement)?.closest("a[data-link]");
@@ -77,15 +92,11 @@ export function createRouter() {
       e.preventDefault();
       if (a.getAttribute("href") !== location.pathname) {
         history.pushState({}, "", a.getAttribute("href"));
-        router();
+        router(currentComponentList);
       }
     }
   });
-  window.addEventListener("popstate", router);
-
-  const app = getAppRoot();
-
-  header.mount(app);
+  window.addEventListener("popstate", router.bind(null, currentComponentList));
 
   router();
 }

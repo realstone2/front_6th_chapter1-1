@@ -3,6 +3,7 @@ import { Component } from "../../../../componet";
 import { productStore } from "../model/product-store";
 import { cartStore } from "../../cart/model/cartStore";
 import { EventDelegator } from "../../../../Event-delegator";
+import { getCartAction } from "../../cart/controller/get-cart-action";
 
 export class 상품목록_상품_리스트_컴포넌트 extends Component {
   subscribeStoreList: Array<() => void> = [];
@@ -84,13 +85,7 @@ export class 상품목록_상품_리스트_컴포넌트 extends Component {
 
       const productId = target.getAttribute("data-product-id");
       if (!productId) return;
-      const product = productStore.value.data.flatMap((v) => v.products).find((p) => p.productId === productId);
-      if (!product) return;
-
-      cartStore.setValue((prev) => ({
-        ...prev,
-        productList: [...prev.productList, product],
-      }));
+      getCartAction().addToCart(productId);
     });
   }
 

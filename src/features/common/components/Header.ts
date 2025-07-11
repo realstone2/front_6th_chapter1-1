@@ -2,7 +2,12 @@ import { Component } from "../../../../componet";
 import { EventDelegator } from "../../../../Event-delegator";
 import { cartStore } from "../../cart/model/cartStore";
 
-export class Header extends Component {
+type HeaderProps = {
+  title?: string;
+  canGoBack?: boolean;
+};
+
+export class Header extends Component<HeaderProps> {
   subscribeStoreList: Array<() => void> = [];
 
   render(): HTMLElement {
@@ -13,9 +18,18 @@ export class Header extends Component {
     el.innerHTML = /* HTML */ `
       <div class="max-w-md mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
-          <h1 class="text-xl font-bold text-gray-900">
-            <a href="/" data-link="">쇼핑몰</a>
-          </h1>
+          <div class="flex items-center space-x-3">
+            ${this.props.canGoBack
+              ? `  <button onclick="window.history.back()" class="p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+              </button>`
+              : ""}
+            <h1 class="text-xl font-bold text-gray-900">
+              <a href=${window.location.pathname} data-link=${window.location.pathname}>${this.props.title}</a>
+            </h1>
+          </div>
           <div class="flex items-center space-x-2">
             <!-- 장바구니 아이콘 -->
             <button
@@ -34,7 +48,9 @@ export class Header extends Component {
                 </svg>
               </div>
               ${cartCount > 0
-                ? `<span class="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full">${cartCount}</span>`
+                ? ` <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                ${cartCount}
+                    </span>`
                 : ""}
               <!-- 필요시 뱃지 추가 -->
             </button>
