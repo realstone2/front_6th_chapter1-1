@@ -2,13 +2,21 @@ import { Component } from "../../../../componet";
 import { cartStore } from "../model/cartStore";
 import { getCartAction } from "../controller/get-cart-action";
 import { EventDelegator } from "../../../../event-delegator";
+import { searchParamsStore } from "../../common/search-params/search-params-store";
 
 export class CartModal extends Component {
   subscribeStoreList: Array<() => void> = [];
 
   render(): HTMLElement {
     const el = document.createElement("div");
-    el.className = "fixed inset-0 z-50 overflow-y-auto cart-modal";
+
+    const visibleCart = searchParamsStore.value?.cart === "true";
+
+    if (!visibleCart) {
+      return el;
+    }
+
+    el.className = "fixed inset-0 z-50 overflow-y-auto cart-modal cart-modal-overlay";
     el.innerHTML = this.isCartEmpty() ? this.renderEmptyCart() : this.renderCartWithItems();
     return el;
   }
@@ -174,6 +182,9 @@ export class CartModal extends Component {
   }
 
   componentDidMount() {
+    searchParamsStore.subscribe(() => {
+      this.update();
+    });
     this.subscribeStoreList.push(
       cartStore.subscribe(() => {
         this.update();
@@ -239,9 +250,10 @@ export class CartModal extends Component {
   };
 
   closeModal() {
-    this.unmount();
-    document.body.classList.remove("modal-open");
-    const modal = document.querySelector(".cart-modal-overlay");
-    if (modal) modal.remove();
+    const searchParams = new URLSearchParams(window.location.search);
+
+    searchParams.delete("cart");
+
+    window.history.replaceState({}, "", `${window.location.pathname}?${searchParams.toString()}`);
   }
 }
