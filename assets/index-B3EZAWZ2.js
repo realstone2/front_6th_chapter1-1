@@ -88,7 +88,7 @@
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
       </svg>
-    `,l.onclick=()=>{this.unmount()},o.appendChild(s),o.appendChild(c),o.appendChild(l),a.appendChild(o),a}};const m=s(null);let h=null;function g(e){let t=document.getElementById(`toast-component`);t&&t.remove(),h&&(clearTimeout(h),h=null),m.setValue(e);let n=new p({type:e.type,message:e.text}),r=document.createElement(`div`);r.style.position=`absolute`,r.style.left=`50%`,r.style.bottom=`32px`,r.style.transform=`translateX(-50%)`,r.style.zIndex=`9999`,document.body.appendChild(r),n.mount(r);let i=e.duration??3e3;h=setTimeout(()=>{m.setValue(null);let e=document.getElementById(`toast-component`);e&&(n.unmount(),e.remove())},i)}const _=c(`cart`,{productList:[],selectedProductIds:[]});function v(){return{addToCart:e=>{let t=l.value.data.flatMap(e=>e.products).find(t=>t.productId===e);t&&(_.setValue(e=>({...e,productList:[...e.productList,t]})),g({text:`장바구니에 추가되었습니다`,type:`success`}))}}}var y=class extends i{constructor(...e){super(...e),this.subscribeStoreList=[]}render(){let e=l.value.data,t=e.flatMap(e=>e.products),n=document.createElement(`div`);return l.value.isLoading&&!t.length||(n.innerHTML=`
+    `,l.onclick=()=>{this.unmount()},o.appendChild(s),o.appendChild(c),o.appendChild(l),a.appendChild(o),a}};const m=s(null);let h=null;function g(e){let t=document.getElementById(`toast-component`);t&&t.remove(),h&&(clearTimeout(h),h=null),m.setValue(e);let n=new p({type:e.type,message:e.text}),r=document.createElement(`div`);r.style.position=`absolute`,r.style.left=`50%`,r.style.bottom=`32px`,r.style.transform=`translateX(-50%)`,r.style.zIndex=`9999`,document.body.appendChild(r),n.mount(r);let i=e.duration??3e3;h=setTimeout(()=>{m.setValue(null);let e=document.getElementById(`toast-component`);e&&(n.unmount(),e.remove())},i)}const _=c(`cart`,{productList:[],selectedProductIds:[]});function v(){return{addToCart:e=>{let t=l.value.data.flatMap(e=>e.products).find(t=>t.productId===e);t&&(_.setValue(e=>({...e,productList:[...e.productList,t]})),g({text:`장바구니에 추가되었습니다`,type:`success`}))},changeQuantity:(e,t)=>{_.setValue(n=>{let r=n.productList.filter(t=>t.productId===e).length;if(r+t<1)return n;let i=[...n.productList];if(t>0){let t=n.productList.find(t=>t.productId===e);t&&i.push(t)}else{let t=!1;i=i.filter(n=>!t&&n.productId===e?(t=!0,!1):!0)}return{...n,productList:i}})},deleteItem:e=>{_.setValue(t=>({...t,productList:t.productList.filter(t=>t.productId!==e),selectedProductIds:t.selectedProductIds.filter(t=>t!==e)}))},toggleSelect:(e,t)=>{_.setValue(n=>{let r=new Set(n.selectedProductIds);return t?r.add(e):r.delete(e),{...n,selectedProductIds:Array.from(r)}})},toggleSelectAll:()=>{_.setValue(e=>{let t=Array.from(new Set(e.productList.map(e=>e.productId))),n=t.every(t=>e.selectedProductIds.includes(t));return{...e,selectedProductIds:n?[]:t}})},deleteSelected:()=>{_.setValue(e=>{let t=new Set(e.selectedProductIds);return{...e,productList:e.productList.filter(e=>!t.has(e.productId)),selectedProductIds:[]}})},clearCart:()=>{_.setValue(e=>({...e,productList:[],selectedProductIds:[]}))},getQuantity:e=>_.value.productList.filter(t=>t.productId===e).length,isSelected:e=>_.value.selectedProductIds.includes(e)}}var y=class extends i{constructor(...e){super(...e),this.subscribeStoreList=[]}render(){let e=l.value.data,t=e.flatMap(e=>e.products),n=document.createElement(`div`);return l.value.isLoading&&!t.length||(n.innerHTML=`
       <div>
         <div class="mb-4 text-sm text-gray-600">
           총 <span class="font-medium text-gray-900">${l.value.data[0]?.pagination?.total}개</span>의 상품
@@ -130,7 +130,7 @@
                 </div>`).join(``)}
         </div>
       </div>
-    `),n}componentDidMount(){this.subscribeStoreList.push(l.subscribe(()=>{this.update()})),f.getInstance().register(`click`,`add-to-cart`,e=>{let t=e.target.closest(`.add-to-cart-btn`);if(!t)return;let n=t.getAttribute(`data-product-id`);n&&v().addToCart(n)}),f.getInstance().register(`click`,`product-card`,e=>{let t=e.target,n=t.closest(`.product-card`)?.getAttribute(`data-product-id`);n&&(history.pushState({},``,`${H}/product/${n}`),window.dispatchEvent(new PopStateEvent(`popstate`)))})}componentWillUnmount(){f.getInstance().unregister(`click`,`add-to-cart`),this.subscribeStoreList.forEach(e=>e())}};const b=s(x());function x(){let e=new URLSearchParams(window.location.search),t={};for(let[n,r]of e.entries())t[n]=r;return t}function S(){let e=()=>{let e=x();b.setValue(e)};e(),window.addEventListener(`popstate`,e);let t=history.pushState,n=history.replaceState;history.pushState=function(...e){t.apply(this,e),window.dispatchEvent(new Event(`pushstate`)),window.dispatchEvent(new Event(`locationchange`))},history.replaceState=function(...e){n.apply(this,e),window.dispatchEvent(new Event(`replacestate`)),window.dispatchEvent(new Event(`locationchange`))},window.addEventListener(`pushstate`,e),window.addEventListener(`replacestate`,e),window.addEventListener(`locationchange`,e)}async function C(){let e=b.value,{limit:t=`20`,search:n=``,category1:r=``,category2:i=``,sort:a=`price_asc`}=e??{},o=e?.current??e?.page??`1`,s=new URLSearchParams({page:o,limit:t,...n&&{search:n},...r&&{category1:r},...i&&{category2:i},sort:a}),c=await fetch(`/api/products?${s}`);return await c.json()}async function w(e){let t=await fetch(`/api/products/${e}`);return await t.json()}async function T(){let e=await fetch(`/api/categories`);return await e.json()}const E=()=>{let e=async()=>{let e=b.value,{limit:t=`20`,search:n=``,category1:r=``,category2:i=``,sort:a=`price_asc`}=e??{},o=l.value.data?.[0]?.filters;o&&(l.value.data[0].filters.category1!==r||l.value.data[0].filters.category2!==i||l.value.data[0].filters.search!==n||l.value.data[0].filters.sort!==a)?l.setValue(t=>({...t,data:[],limit:parseInt(e?.limit||`20`,10),isLoading:!0})):l.setValue(t=>({...t,limit:parseInt(e?.limit||`20`,10),isLoading:!0}));let s=await C();l.setValue(e=>e.data.some(e=>e.pagination.page===s.pagination.page&&e.pagination.limit===s.pagination.limit)?{...e,isLoading:!1}:{...e,isLoading:!1,data:e.data.concat([s])})};return e(),b.subscribe(e)},D=s({isLoading:!1,data:{}}),O=async()=>{D.setValue(e=>({...e,isLoading:!0}));let e=await T();D.setValue(t=>({isLoading:!1,data:e}))};var k=class extends i{constructor(...e){super(...e),this.unsubscribeList=[]}render(){let e=document.createElement(`section`);if(D.value.isLoading)return e.innerHTML=` <div class="flex items-center gap-2">
+    `),n}componentDidMount(){this.subscribeStoreList.push(l.subscribe(()=>{this.update()})),f.getInstance().register(`click`,`add-to-cart`,e=>{let t=e.target.closest(`.add-to-cart-btn`);if(!t)return;let n=t.getAttribute(`data-product-id`);n&&v().addToCart(n)}),f.getInstance().register(`click`,`product-card`,e=>{let t=e.target,n=t.closest(`.product-card`)?.getAttribute(`data-product-id`);n&&(history.pushState({},``,`${K}/product/${n}`),window.dispatchEvent(new PopStateEvent(`popstate`)))})}componentWillUnmount(){f.getInstance().unregister(`click`,`add-to-cart`),this.subscribeStoreList.forEach(e=>e())}};const b=s(x());function x(){let e=new URLSearchParams(window.location.search),t={};for(let[n,r]of e.entries())t[n]=r;return t}function S(){let e=()=>{let e=x();b.setValue(e)};e(),window.addEventListener(`popstate`,e);let t=history.pushState,n=history.replaceState;history.pushState=function(...e){t.apply(this,e),window.dispatchEvent(new Event(`pushstate`)),window.dispatchEvent(new Event(`locationchange`))},history.replaceState=function(...e){n.apply(this,e),window.dispatchEvent(new Event(`replacestate`)),window.dispatchEvent(new Event(`locationchange`))},window.addEventListener(`pushstate`,e),window.addEventListener(`replacestate`,e),window.addEventListener(`locationchange`,e)}async function C(){let e=b.value,{limit:t=`20`,search:n=``,category1:r=``,category2:i=``,sort:a=`price_asc`}=e??{},o=e?.current??e?.page??`1`,s=new URLSearchParams({page:o,limit:t,...n&&{search:n},...r&&{category1:r},...i&&{category2:i},sort:a}),c=await fetch(`/api/products?${s}`);return await c.json()}async function w(e){let t=await fetch(`/api/products/${e}`);return await t.json()}async function T(){let e=await fetch(`/api/categories`);return await e.json()}const E=()=>{let e=async()=>{let e=b.value,{limit:t=`20`,search:n=``,category1:r=``,category2:i=``,sort:a=`price_asc`}=e??{},o=l.value.data?.[0]?.filters;o&&(l.value.data[0].filters.category1!==r||l.value.data[0].filters.category2!==i||l.value.data[0].filters.search!==n||l.value.data[0].filters.sort!==a)?l.setValue(t=>({...t,data:[],limit:parseInt(e?.limit||`20`,10),isLoading:!0})):l.setValue(t=>({...t,limit:parseInt(e?.limit||`20`,10),isLoading:!0}));let s=await C();l.setValue(e=>e.data.some(e=>e.pagination.page===s.pagination.page&&e.pagination.limit===s.pagination.limit)?{...e,isLoading:!1}:{...e,isLoading:!1,data:e.data.concat([s])})};return e(),b.subscribe(e)},D=s({isLoading:!1,data:{}}),O=async()=>{D.setValue(e=>({...e,isLoading:!0}));let e=await T();D.setValue(t=>({isLoading:!1,data:e}))};var k=class extends i{constructor(...e){super(...e),this.unsubscribeList=[]}render(){let e=document.createElement(`section`);if(D.value.isLoading)return e.innerHTML=` <div class="flex items-center gap-2">
         <div class="flex flex-wrap gap-2" id="category1-area">카테고리 로딩 중...</div>
       </div>`,e;let t=b.value,{category1:n=``,category2:r=``}=t??{},i=D.value.data,a=Object.keys(i),o=n&&i[n]?Object.keys(i[n]):[],s=`<label class='text-sm text-gray-600'>카테고리:</label>`;s+=`<button data-breadcrumb="reset" class="text-xs hover:text-blue-800 hover:underline">전체</button>`,n&&(s+=`  <span class="text-xs text-gray-500">&gt;</span> 
        <button data-breadcrumb="category1" data-category1=${n} class="text-xs hover:text-blue-800 hover:underline">${n}</button>
@@ -306,7 +306,7 @@
           상품 목록으로 돌아가기
         </button>
       </div>
-    `,n}componentDidMount(){F.subscribe(()=>{this.state={...this.state,product:F.value.data}}),this.state={...this.state,product:F.value.data},f.getInstance().register(`click`,`add-to-cart`,e=>{let{product:t}=this.state;if(!t)return;let n=e.target,r=n.getAttribute(`data-product-id`);r&&v().addToCart(r)}),f.getInstance().register(`click`,`quantity-decrease`,()=>{this.state={...this.state,cartCount:Math.max(1,this.state.cartCount-1)}}),f.getInstance().register(`click`,`quantity-increase`,()=>{let{product:e,cartCount:t}=this.state;this.state={...this.state,cartCount:Math.min(t+1,e?.stock??1)}}),f.getInstance().register(`change`,`quantity-input`,e=>{let{product:t}=this.state,n=e.target,r=parseInt(n.value,10);this.state={...this.state,cartCount:Math.max(1,Math.min(isNaN(r)?1:r,t?.stock??1))}})}componentWillUnmount(){f.getInstance().unregister(`click`,`add-to-cart`),f.getInstance().unregister(`click`,`quantity-decrease`),f.getInstance().unregister(`click`,`quantity-increase`),f.getInstance().unregister(`change`,`quantity-input`)}},B=class extends i{constructor(e){super(e,{cartCount:1}),this.RelatedProductList=new L,this.ProductDetailLoading=new R,this.ProductDetailContent=new z,this.subscribeStoreList=[]}render(){let e=document.createElement(`div`);return e.innerHTML=`
+    `,n}componentDidMount(){F.subscribe(()=>{this.state={...this.state,product:F.value.data}}),this.state={...this.state,product:F.value.data},f.getInstance().register(`click`,`add-to-cart`,e=>{let{product:t,cartCount:n}=this.state;if(!t)return;let r=e.target.closest(`button[event-id='add-to-cart']`),i=r?.getAttribute(`data-product-id`);if(!i)return;let a=v();for(let e=0;e<n;e++)a.addToCart(i)}),f.getInstance().register(`click`,`quantity-decrease`,()=>{this.state={...this.state,cartCount:Math.max(1,this.state.cartCount-1)}}),f.getInstance().register(`click`,`quantity-increase`,()=>{let{product:e,cartCount:t}=this.state;this.state={...this.state,cartCount:Math.min(t+1,e?.stock??1)}}),f.getInstance().register(`change`,`quantity-input`,e=>{let{product:t}=this.state,n=e.target,r=parseInt(n.value,10);this.state={...this.state,cartCount:Math.max(1,Math.min(isNaN(r)?1:r,t?.stock??1))}})}componentWillUnmount(){f.getInstance().unregister(`click`,`add-to-cart`),f.getInstance().unregister(`click`,`quantity-decrease`),f.getInstance().unregister(`click`,`quantity-increase`),f.getInstance().unregister(`change`,`quantity-input`)}},B=class extends i{constructor(e){super(e,{cartCount:1}),this.RelatedProductList=new L,this.ProductDetailLoading=new R,this.ProductDetailContent=new z,this.subscribeStoreList=[]}render(){let e=document.createElement(`div`);return e.innerHTML=`
       <main class="max-w-md mx-auto px-4 py-4" >
       <div id="product-detail-main"></div>
         <div id="related-product-container"></div></main>
@@ -354,4 +354,129 @@
           </div>
         </div>
       </div>
-    `,t}componentDidMount(){_.subscribe(()=>{this.update()}),f.getInstance().register(`click`,`cart-btn`,e=>{let t=new URLSearchParams(window.location.search);t.set(`cart`,`true`);let n=window.location.pathname+(t.toString()?`?${t.toString()}`:``);window.history.replaceState({},``,n)})}componentWillUnmount(){f.getInstance().unregister(`click`,`cart-btn`),this.subscribeStoreList.forEach(e=>e())}};const H=`/front_6th_chapter1-1`;let U=[];const W=[{path:H+`/`,component:P,title:`쇼핑몰`},{path:H+`/product/:productID`,component:B,title:`상품 상세`,canGoBack:!0},{path:`*`,component:a}];function G(e){for(let t of W){if(t.path===`*`)continue;let n=t.path.replace(/:([^/]+)/g,`[^/]+`),r=RegExp(`^`+n+`$`,`i`);if(r.test(e))return t}return W.find(e=>e.path===`*`)}function K(){return document.getElementById(`root`)||document.body}function q(){U&&(U.map(e=>{e.unmount()}),U=[]);let e=G(window.location.pathname);if(!e?.component)return;let t=K();t&&(U.push(new V({title:e.title,canGoBack:e.canGoBack})),U.push(new e.component),U.forEach(e=>{e.mount(t)}))}function J(){document.body.addEventListener(`click`,e=>{let t=e.target?.closest(`a[data-link]`);if(t&&t instanceof HTMLAnchorElement&&t.href){if(e.target.closest(`[event-id]`)){e.preventDefault();return}if(t.host!==location.host)return;e.preventDefault(),t.getAttribute(`href`)!==location.pathname&&(history.pushState({},``,H+t.getAttribute(`href`)),q())}}),window.addEventListener(`popstate`,q),q()}const Y=()=>{J(),S()},X=()=>r(async()=>{let{worker:e,workerOptions:t}=await import(`./browser-DvH8zzVn.js`);return{worker:e,workerOptions:t}},[]).then(({worker:e,workerOptions:t})=>e.start(t));X().then(Y);
+    `,t}componentDidMount(){_.subscribe(()=>{this.update()}),f.getInstance().register(`click`,`cart-btn`,e=>{let t=new URLSearchParams(window.location.search);t.set(`cart`,`true`);let n=window.location.pathname+(t.toString()?`?${t.toString()}`:``);window.history.replaceState({},``,n)})}componentWillUnmount(){f.getInstance().unregister(`click`,`cart-btn`),this.subscribeStoreList.forEach(e=>e())}},H=class extends i{constructor(...e){super(...e),this.subscribeStoreList=[],this.handleEsc=e=>{e.key===`Escape`&&this.closeModal()}}render(){let e=document.createElement(`div`);return e.className=`fixed inset-0 z-50 overflow-y-auto cart-modal`,e.innerHTML=this.isCartEmpty()?this.renderEmptyCart():this.renderCartWithItems(),e}isCartEmpty(){return _.value.productList.length===0}renderEmptyCart(){return`
+      <div class="flex min-h-full items-end justify-center p-0 sm:items-center sm:p-4">
+        <div class="relative bg-white rounded-t-lg sm:rounded-lg shadow-xl w-full max-w-md sm:max-w-lg max-h-[90vh] overflow-hidden">
+          <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+            <h2 class="text-lg font-bold text-gray-900 flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m2.6 8L6 2H3m4 11v6a1 1 0 001 1h1a1 1 0 001-1v-6M13 13v6a1 1 0 001 1h1a1 1 0 001-1v-6"></path>
+              </svg>
+              장바구니
+              <span class="text-sm font-normal text-gray-600 ml-1">(0)</span>
+            </h2>
+            <button event-id="cart-modal-close-btn" class="text-gray-400 hover:text-gray-600 p-1">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="flex flex-col max-h-[calc(90vh-120px)]">
+            <div class="flex-1 flex items-center justify-center p-8">
+              <div class="text-center">
+                <div class="text-gray-400 mb-4">
+                  <svg class="mx-auto h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m2.6 8L6 2H3m4 11v6a1 1 0 001 1h1a1 1 0 001-1v-6M13 13v6a1 1 0 001 1h1a1 1 0 001-1v-6"></path>
+                  </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">장바구니가 비어있습니다</h3>
+                <p class="text-gray-600">원하는 상품을 담아보세요!</p>
+              </div>
+            </div>
+          </div>
+          <div class="sticky bottom-0 bg-white border-t border-gray-200 p-4">
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-lg font-bold text-gray-900">총 금액</span>
+              <span class="text-xl font-bold text-blue-600">0원</span>
+            </div>
+            <div class="space-y-2">
+              <div class="flex gap-2">
+                <button event-id="clear-cart-btn" class="flex-1 bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-colors text-sm" disabled>전체 비우기</button>
+                <button class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm" disabled>구매하기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `}renderCartWithItems(){let e=v(),t=new Map;_.value.productList.forEach(e=>{t.has(e.productId)?t.get(e.productId).quantity++:t.set(e.productId,{product:e,quantity:1})});let n=Array.from(t.values()),r=_.value.productList.length,i=_.value.selectedProductIds?.length||0,a=this.getTotalPrice(),o=_.value.productList.filter(t=>e.isSelected(t.productId)).reduce((e,t)=>e+Number(t.lprice||t.hprice),0);return`
+      <div class="flex min-h-full items-end justify-center p-0 sm:items-center sm:p-4">
+        <div class="relative bg-white rounded-t-lg sm:rounded-lg shadow-xl w-full max-w-md sm:max-w-lg max-h-[90vh] overflow-hidden">
+          <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+            <h2 class="text-lg font-bold text-gray-900 flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m2.6 8L6 2H3m4 11v6a1 1 0 001 1h1a1 1 0 001-1v-6M13 13v6a1 1 0 001 1h1a1 1 0 001-1v-6"></path>
+              </svg>
+              장바구니
+              <span class="text-sm font-normal text-gray-600 ml-1">(${r})</span>
+            </h2>
+            <button event-id="cart-modal-close-btn" class="text-gray-400 hover:text-gray-600 p-1">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="flex flex-col max-h-[calc(90vh-120px)]">
+            <div class="p-4 border-b border-gray-200 bg-gray-50">
+              <label class="flex items-center text-sm text-gray-700">
+                <input type="checkbox" event-id="select-all-btn" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-2" ${i===r?`checked`:``}>
+                전체선택 (${r}개)
+              </label>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+              <div class="p-4 space-y-4">
+                ${n.map(({product:t,quantity:n})=>{let r=e.isSelected(t.productId);return`
+                      <div class="flex items-center py-3 border-b border-gray-100 cart-item" data-product-id="${t.productId}">
+                        <label class="flex items-center mr-3">
+                          <input type="checkbox" class="cart-item-checkbox w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" data-product-id="${t.productId}" ${r?`checked`:``}>
+                        </label>
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden mr-3 flex-shrink-0">
+                          <img src="${t.image}" alt="${t.title}" class="w-full h-full object-cover cursor-pointer cart-item-image" data-product-id="${t.productId}">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                          <h4 class="text-sm font-medium text-gray-900 truncate cursor-pointer cart-item-title" data-product-id="${t.productId}">${t.title}</h4>
+                          <p class="text-sm text-gray-600 mt-1">${Number(t.lprice||t.hprice).toLocaleString()}원</p>
+                          <div class="flex items-center mt-2">
+                            <button event-id="qty-dec" class="quantity-decrease-btn w-7 h-7 flex items-center justify-center border border-gray-300 rounded-l-md bg-gray-50 hover:bg-gray-100" data-product-id="${t.productId}">
+                              <svg  class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                              </svg>
+                            </button>
+                            <input type="number" value="${n}" min="1" class="quantity-input w-12 h-7 text-center text-sm border-t border-b border-gray-300 focus:ring-1 focus:ring-blue-500 focus:border-blue-500" disabled data-product-id="${t.productId}">
+                            <button event-id="qty-inc" class="quantity-increase-btn w-7 h-7 flex items-center justify-center border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100" data-product-id="${t.productId}">
+                              <svg  class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="text-right ml-3">
+                          <p class="text-sm font-medium text-gray-900">${(Number(t.lprice||t.hprice)*n).toLocaleString()}원</p>
+                          <button event-id="delete-item-btn" class="cart-item-remove-btn mt-1 text-xs text-red-600 hover:text-red-800" data-product-id="${t.productId}">삭제</button>
+                        </div>
+                      </div>
+                    `}).join(``)}
+              </div>
+            </div>
+          </div>
+          <div class="sticky bottom-0 bg-white border-t border-gray-200 p-4">
+            <div class="flex justify-between items-center mb-3 text-sm">
+              <span class="text-gray-600">선택한 상품 (${i}개)</span>
+              <span class="font-medium">${o.toLocaleString()}원</span>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-lg font-bold text-gray-900">총 금액</span>
+              <span class="text-xl font-bold text-blue-600">${a.toLocaleString()}원</span>
+            </div>
+            <div class="space-y-2">
+              <button event-id="delete-selected-btn" class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors text-sm" ${i===0?`disabled`:``}>
+                선택한 상품 삭제 (${i}개)
+              </button>
+              <div class="flex gap-2">
+                <button event-id="clear-cart-btn" class="flex-1 bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition-colors text-sm">전체 비우기</button>
+                <button class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm">구매하기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `}getTotalPrice(){return _.value.productList.reduce((e,t)=>e+Number(t.lprice||t.hprice),0)}componentDidMount(){this.subscribeStoreList.push(_.subscribe(()=>{this.update()}));let e=v();f.getInstance().register(`click`,`cart-modal-close-btn`,()=>this.closeModal()),f.getInstance().register(`click`,`qty-inc`,t=>{let n=t.target.closest(`button[event-id='qty-inc']`),r=n?.getAttribute(`data-product-id`);r&&e.changeQuantity(r,1)}),f.getInstance().register(`click`,`qty-dec`,t=>{let n=t.target.closest(`button[event-id='qty-dec']`),r=n?.getAttribute(`data-product-id`);r&&e.changeQuantity(r,-1)}),f.getInstance().register(`click`,`delete-item-btn`,t=>{let n=t.target.getAttribute(`data-product-id`);n&&e.deleteItem(n)}),f.getInstance().register(`click`,`select-all-btn`,()=>{e.toggleSelectAll()}),f.getInstance().register(`click`,`delete-selected-btn`,()=>{e.deleteSelected()}),f.getInstance().register(`click`,`clear-cart-btn`,()=>{e.clearCart()}),this.el.addEventListener(`change`,t=>{let n=t.target;if(n.classList.contains(`cart-item-checkbox`)){let t=n.getAttribute(`data-product-id`);t&&e.toggleSelect(t,n.checked)}}),this.el.addEventListener(`click`,e=>{e.target===this.el&&this.closeModal()}),window.addEventListener(`keydown`,this.handleEsc)}componentWillUnmount(){this.subscribeStoreList.forEach(e=>e()),window.removeEventListener(`keydown`,this.handleEsc),f.getInstance().unregister(`click`,`cart-modal-close-btn`),f.getInstance().unregister(`click`,`qty-inc`),f.getInstance().unregister(`click`,`qty-dec`),f.getInstance().unregister(`click`,`delete-item-btn`),f.getInstance().unregister(`click`,`select-all-btn`),f.getInstance().unregister(`click`,`delete-selected-btn`),f.getInstance().unregister(`click`,`clear-cart-btn`)}closeModal(){this.unmount(),document.body.classList.remove(`modal-open`);let e=document.querySelector(`.cart-modal-overlay`);e&&e.remove()}};let U=null;const W=new H;_.subscribe(()=>{W.update()});function G(){let e=b.value?.cart===`true`;e?W.mount(document.body):U&&U.unmount()}const K=`/front_6th_chapter1-1`;let q=[];const J=[{path:K+`/`,component:P,title:`쇼핑몰`},{path:K+`/product/:productID`,component:B,title:`상품 상세`,canGoBack:!0},{path:`*`,component:a}];function Y(e){for(let t of J){if(t.path===`*`)continue;let n=t.path.replace(/:([^/]+)/g,`[^/]+`),r=RegExp(`^`+n+`$`,`i`);if(r.test(e))return t}return J.find(e=>e.path===`*`)}function X(){return document.getElementById(`root`)||document.body}function Z(){q&&(q.map(e=>{e.unmount()}),q=[]);let e=Y(window.location.pathname);if(!e?.component)return;let t=X();t&&(q.push(new V({title:e.title,canGoBack:e.canGoBack})),q.push(new e.component),q.forEach(e=>{e.mount(t)}))}function Q(){b.subscribe(()=>{console.log(`🐶 jindol log`,`call`),G()}),document.body.addEventListener(`click`,e=>{let t=e.target?.closest(`a[data-link]`);if(t&&t instanceof HTMLAnchorElement&&t.href){if(e.target.closest(`[event-id]`)){e.preventDefault();return}if(t.host!==location.host)return;e.preventDefault(),t.getAttribute(`href`)!==location.pathname&&(history.pushState({},``,K+t.getAttribute(`href`)),Z())}}),window.addEventListener(`popstate`,Z),Z()}const $=()=>{Q(),S()},ee=()=>r(async()=>{let{worker:e,workerOptions:t}=await import(`./browser-B1ua0W-q.js`);return{worker:e,workerOptions:t}},[]).then(({worker:e,workerOptions:t})=>e.start(t));ee().then($);
