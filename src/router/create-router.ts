@@ -3,6 +3,8 @@ import { HomeComponent } from "../pages/Home";
 import { ProductDetailPage } from "../pages/product/ProductDetailPage";
 import { Component } from "../../componet";
 import { Header } from "../features/common/components/Header";
+import { handleModal } from "../features/cart/controller/handle-modal.ts";
+import { searchParamsStore } from "../features/common/search-params/search-params-store.ts";
 
 export const BASE_PATH = import.meta.env.PROD ? "/front_6th_chapter1-1" : "";
 
@@ -82,6 +84,11 @@ function router() {
 }
 
 export function createRouter() {
+  searchParamsStore.subscribe(() => {
+    console.log("🐶 jindol log", "call");
+    handleModal();
+  });
+
   document.body.addEventListener("click", (e) => {
     const a = (e.target as HTMLElement)?.closest("a[data-link]");
     if (a && a instanceof HTMLAnchorElement && a.href) {

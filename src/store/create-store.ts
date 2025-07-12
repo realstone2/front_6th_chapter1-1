@@ -44,7 +44,7 @@ export const createPersistStore = <T extends object | unknown[]>(key: string, in
   const storedValue = localStorage.getItem(key);
   const parsedValue = storedValue ? JSON.parse(storedValue) : initValue;
 
-  let value = parsedValue;
+  let value = parsedValue as T;
   let listeners: Listener[] = [];
 
   return {

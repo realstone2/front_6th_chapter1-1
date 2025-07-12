@@ -11,6 +11,7 @@ export class Header extends Component<HeaderProps> {
   subscribeStoreList: Array<() => void> = [];
 
   render(): HTMLElement {
+    // productList의 고유 productId 개수로 카운트
     const cartCount = new Set(cartStore.value.productList.map((v) => v.productId)).size;
 
     const el = document.createElement("header");
