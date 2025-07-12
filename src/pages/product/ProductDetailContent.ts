@@ -112,12 +112,15 @@ export class ProductDetailContent extends Component<{}, { cartCount: number; pro
 
     // 이벤트 위임 등록
     EventDelegator.getInstance().register("click", "add-to-cart", (e) => {
-      const { product } = this.state;
+      const { product, cartCount } = this.state;
       if (!product) return;
-      const target = e.target as HTMLElement;
-      const productId = target.getAttribute("data-product-id");
+      const button = (e.target as HTMLElement).closest("button[event-id='add-to-cart']");
+      const productId = button?.getAttribute("data-product-id");
       if (!productId) return;
-      getCartAction().addToCart(productId);
+      const actions = getCartAction();
+      for (let i = 0; i < cartCount; i++) {
+        actions.addToCart(productId);
+      }
     });
     EventDelegator.getInstance().register("click", "quantity-decrease", () => {
       this.state = {
